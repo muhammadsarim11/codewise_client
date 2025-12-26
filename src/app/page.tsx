@@ -1,64 +1,443 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import Editor from '@monaco-editor/react';
+import { 
+  Upload, 
+  FileCode, 
+  X, 
+  Code2, 
+  ArrowRight, 
+  CheckCircle2,
+  AlertCircle,
+  FileText,
+  LayoutDashboard,
+  Folder,
+  Clock,
+  Settings,
+  LogOut,
+  Plus
+} from 'lucide-react';
+
+// Language Options
+const LANGUAGES = [
+  { id: 'javascript', name: 'JavaScript', ext: 'js' },
+  { id: 'typescript', name: 'TypeScript', ext: 'ts' },
+  { id: 'python', name: 'Python', ext: 'py' },
+  { id: 'java', name: 'Java', ext: 'java' },
+  { id: 'cpp', name: 'C++', ext: 'cpp' },
+  { id: 'csharp', name: 'C#', ext: 'cs' },
+  { id: 'go', name: 'Go', ext: 'go' },
+  { id: 'rust', name: 'Rust', ext: 'rs' },
+  { id: 'php', name: 'PHP', ext: 'php' },
+  { id: 'ruby', name: 'Ruby', ext: 'rb' },
+  { id: 'swift', name: 'Swift', ext: 'swift' },
+  { id: 'kotlin', name: 'Kotlin', ext: 'kt' },
+];
 
 export default function Home() {
+  const router = useRouter();
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  
+  // Tabs: 'upload' | 'paste'
+  const [activeTab, setActiveTab] = useState<'upload' | 'paste'>('upload');
+
+  // Sidebar State (Active Page placeholder)
+  const [activePage, setActivePage] = useState('dashboard');
+
+  // Upload State
+  const [file, setFile] = useState<File | null>(null);
+  
+  // Paste State
+  const [code, setCode] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0]);
+
+  // Analysis State
+  const [analyzing, setAnalyzing] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [stage, setStage] = useState('Initializing');
+
+  // Auth Check
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    const storedUser = localStorage.getItem('user');
+
+    if (!token) {
+      router.push('/users/signin');
+    } else if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, [router]);
+
+  // --- Handlers ---
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      setFile(e.dataTransfer.files[0]);
+    }
+  };
+
+  const generateRandomFilename = (ext: string) => {
+    const timestamp = Date.now().toString(36);
+    const randomPart = Math.random().toString(36).substring(2, 6);
+    return `snippet_${timestamp}_${randomPart}.${ext}`;
+  };
+
+  const handleAnalyze = async () => {
+    let fileToSend: File | null = null;
+
+    if (activeTab === 'upload') {
+      if (!file) return;
+      fileToSend = file;
+    } else {
+      if (!code.trim()) {
+        alert("Please enter some code first.");
+        return;
+      }
+      const filename = generateRandomFilename(selectedLanguage.ext);
+      const blob = new Blob([code], { type: 'text/plain' });
+      fileToSend = new File([blob], filename, { type: 'text/plain' });
+    }
+
+    setAnalyzing(true);
+    setProgress(0);
+    setStage('Uploading...');
+
+    const formData = new FormData();
+    formData.append('file', fileToSend);
+
+    try {
+      const token = localStorage.getItem('accessToken');
+      
+      const progressInterval = setInterval(() => {
+        setProgress(prev => {
+          if (prev >= 90) return prev;
+          return prev + Math.random() * 10;
+        });
+      }, 500);
+
+      const response = await axios.post('http://localhost:5000/explainations', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      clearInterval(progressInterval);
+      setProgress(100);
+      setStage('Complete');
+
+      const newId = response.data.explanation?.id || response.data.id || response.data.data?.id;
+
+      if (newId) {
+        setTimeout(() => {
+          router.push(`/explanation/${newId}`);
+        }, 800);
+      } else {
+        alert("Analysis finished, but no ID was returned.");
+        setAnalyzing(false);
+      }
+
+    } catch (error: any) {
+      console.error('Analysis failed:', error);
+      alert(error.response?.data?.message || 'Analysis failed. Please try again.');
+      setAnalyzing(false);
+      setProgress(0);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('user');
+    router.push('/users/signin');
+  };
+
+  if (!user) return null;
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="flex h-screen bg-[#000000] font-sans text-white overflow-hidden selection:bg-white selection:text-black">
+      
+      {/* SIDEBAR */}
+      <aside className="w-64 flex-none border-r border-[#333333] bg-[#000000] flex flex-col justify-between relative z-20">
+        <div>
+           {/* Logo Area */}
+           <div className="h-16 flex items-center gap-3 px-6 border-b border-[#333333]">
+              <div className="size-6 text-white">
+                <svg className="w-full h-full" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                  <path clipRule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fillRule="evenodd"></path>
+                  <path clipRule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fillRule="evenodd"></path>
+                </svg>
+              </div>
+              <span className="font-mono font-semibold tracking-tight">CodeWise</span>
+           </div>
+
+           {/* Navigation */}
+           <nav className="p-4 space-y-1">
+             <button 
+                onClick={() => setActivePage('dashboard')}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-mono transition-colors ${activePage === 'dashboard' ? 'bg-[#111] text-white' : 'text-[#888] hover:text-white hover:bg-[#111]'}`}
+             >
+                <LayoutDashboard size={16} /> Dashboard
+             </button>
+             <button 
+                onClick={() =>{
+
+                  setActivePage('projects')
+                    router.push('/projects');
+                } 
+
+                }
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-mono transition-colors ${activePage === 'projects' ? 'bg-[#111] text-white' : 'text-[#888] hover:text-white hover:bg-[#111]'}`}
+             >
+                <Folder size={16} /> Projects
+             </button>
+             <button 
+                onClick={() => setActivePage('recent')}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-mono transition-colors ${activePage === 'recent' ? 'bg-[#111] text-white' : 'text-[#888] hover:text-white hover:bg-[#111]'}`}
+             >
+                <Clock size={16} /> Recent
+             </button>
+             <button 
+                onClick={() => setActivePage('settings')}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-mono transition-colors ${activePage === 'settings' ? 'bg-[#111] text-white' : 'text-[#888] hover:text-white hover:bg-[#111]'}`}
+             >
+                <Settings size={16} /> Settings
+             </button>
+           </nav>
+        </div>
+
+        {/* User Footer */}
+        <div className="p-4 border-t border-[#333333]">
+           <div className="flex items-center gap-3 mb-4 px-2">
+              <div className="size-8 rounded-full bg-[#333] flex items-center justify-center text-xs font-mono font-medium text-white border border-[#444]">
+                {user.name.charAt(0).toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                 <p className="text-sm font-medium text-white truncate">{user.name}</p>
+                 <p className="text-xs text-[#666] truncate font-mono">{user.email}</p>
+              </div>
+           </div>
+           <button 
+              onClick={handleLogout}
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-xs font-mono text-[#888] hover:text-red-400 hover:bg-red-900/10 transition-colors"
+           >
+              <LogOut size={14} /> Sign Out
+           </button>
+        </div>
+      </aside>
+
+      {/* MAIN CONTENT AREA */}
+      <main className="flex-1 flex flex-col relative overflow-hidden bg-[#000000]">
+        
+        {/* Background Grid Pattern */}
+        <div 
+          className="absolute inset-0 z-0 pointer-events-none opacity-20" 
+          style={{
+            backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)',
+            backgroundSize: '40px 40px'
+          }}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+
+        {/* Content Container */}
+        <div className="flex-1 flex flex-col items-center justify-center p-6 z-10 overflow-y-auto">
+          
+          {/* Header for Dashboard view */}
+          {activePage === 'dashboard' && !analyzing && (
+             <div className="mb-8 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <h1 className="text-2xl font-semibold tracking-tight text-white mb-2">Ready to Optimize?</h1>
+                <p className="text-[#888] text-sm font-mono">Upload a file or paste code to generate an AI explanation.</p>
+             </div>
+          )}
+
+          {!analyzing ? (
+            // --- DASHBOARD INPUT UI ---
+            <div className="w-full max-w-[600px] bg-[#111111] border border-[#333333] rounded-lg shadow-2xl overflow-hidden relative animate-in fade-in zoom-in duration-300">
+               
+               {/* Tab Navigation */}
+               <div className="flex border-b border-[#333333]">
+                 <button 
+                   onClick={() => setActiveTab('upload')}
+                   className={`flex-1 py-3 text-xs font-mono font-medium flex items-center justify-center gap-2 transition-colors ${activeTab === 'upload' ? 'bg-[#111] text-white border-b-2 border-white' : 'bg-black text-[#666] hover:text-[#999]'}`}
+                 >
+                   <Upload size={14} /> Upload File
+                 </button>
+                 <button 
+                   onClick={() => setActiveTab('paste')}
+                   className={`flex-1 py-3 text-xs font-mono font-medium flex items-center justify-center gap-2 transition-colors ${activeTab === 'paste' ? 'bg-[#111] text-white border-b-2 border-white' : 'bg-black text-[#666] hover:text-[#999]'}`}
+                 >
+                   <Code2 size={14} /> Paste Code
+                 </button>
+               </div>
+
+               <div className="p-8">
+                  {activeTab === 'upload' ? (
+                    // UPLOAD VIEW
+                    <div className="flex flex-col items-center text-center">
+                        <div className="mb-6 relative">
+                          <div className="relative bg-black rounded-full p-4 border border-[#333333] group hover:border-white/20 transition-colors">
+                            <Upload className="text-white w-8 h-8" strokeWidth={1.5} />
+                          </div>
+                        </div>
+                        
+                        <div 
+                          className={`w-full mb-8 relative group cursor-pointer`}
+                          onDragOver={(e) => e.preventDefault()}
+                          onDrop={handleDrop}
+                        >
+                          <input 
+                            type="file" 
+                            onChange={handleFileChange} 
+                            className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer" 
+                          />
+                          <div className={`
+                            border border-dashed rounded-md p-8 flex flex-col items-center justify-center gap-3 transition-all h-40
+                            ${file ? 'border-white/40 bg-white/5' : 'border-[#333333] bg-black group-hover:border-[#555]'}
+                          `}>
+                            {file ? (
+                              <>
+                                <FileCode className="text-white w-8 h-8" />
+                                <span className="text-sm font-mono text-white break-all">{file.name}</span>
+                                <span className="text-xs font-mono text-[#888888]">{(file.size / 1024).toFixed(2)} KB</span>
+                              </>
+                            ) : (
+                              <>
+                                <p className="text-sm text-[#888888] max-w-xs mx-auto leading-relaxed">
+                                  Drag & drop your source code here<br/>
+                                  <span className="text-xs text-[#555]">(zip, js, py, java, cpp)</span>
+                                </p>
+                              </>
+                            )}
+                          </div>
+                        </div>
+
+                        <button 
+                          onClick={handleAnalyze}
+                          disabled={!file}
+                          className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded bg-white text-black hover:bg-gray-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-xs font-mono font-bold tracking-wider"
+                        >
+                          ANALYZE FILE <ArrowRight size={14} />
+                        </button>
+                    </div>
+                  ) : (
+                    // PASTE CODE VIEW
+                    <div className="flex flex-col h-[420px]">
+                       <div className="flex justify-between items-center mb-4">
+                         <label className="text-xs font-mono text-[#888888] uppercase">Language</label>
+                         <div className="relative">
+                           <select 
+                             value={selectedLanguage.id}
+                             onChange={(e) => setSelectedLanguage(LANGUAGES.find(l => l.id === e.target.value) || LANGUAGES[0])}
+                             className="appearance-none bg-[#0a0a0a] border border-[#333] text-white text-xs font-mono rounded px-3 py-1.5 pr-8 focus:outline-none focus:border-white cursor-pointer"
+                           >
+                             {LANGUAGES.map(lang => (
+                               <option key={lang.id} value={lang.id}>{lang.name} (.{lang.ext})</option>
+                             ))}
+                           </select>
+                           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#888]">
+                             <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                           </div>
+                         </div>
+                       </div>
+
+                       <div className="flex-1 border border-[#333333] rounded-md overflow-hidden mb-6 relative">
+                          <Editor
+                            height="100%"
+                            defaultLanguage="javascript"
+                            language={selectedLanguage.id}
+                            value={code}
+                            onChange={(value) => setCode(value || '')}
+                            theme="vs-dark"
+                            options={{
+                              minimap: { enabled: false },
+                              fontSize: 13,
+                              fontFamily: 'JetBrains Mono, monospace',
+                              scrollBeyondLastLine: false,
+                              padding: { top: 16, bottom: 16 },
+                              renderLineHighlight: 'none'
+                            }}
+                          />
+                       </div>
+
+                       <button 
+                          onClick={handleAnalyze}
+                          disabled={!code.trim()}
+                          className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded bg-white text-black hover:bg-gray-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-xs font-mono font-bold tracking-wider"
+                        >
+                          ANALYZE CODE <ArrowRight size={14} />
+                        </button>
+                    </div>
+                  )}
+               </div>
+            </div>
+          ) : (
+            // --- LOADING STATE (Matches Design) ---
+            <div className="w-full max-w-[440px] bg-[#111111] border border-[#333333] rounded-md shadow-2xl overflow-hidden relative">
+              <div className="p-8 flex flex-col items-center text-center">
+                <div className="mb-6 relative">
+                  <div className="relative bg-black rounded-full p-4 border border-[#333333]">
+                    {/* Rotating Icon */}
+                    <div className="animate-spin-slow">
+                       <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+                       </svg>
+                    </div>
+                  </div>
+                </div>
+                
+                <h2 className="text-lg font-medium text-white mb-2 tracking-tight">Analyzing Logic...</h2>
+                
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-black border border-[#333333] mb-8">
+                  <span className="text-[10px] uppercase font-mono text-[#888888] tracking-widest">ID</span>
+                  <span className="text-xs font-mono text-white">#{(Math.random() * 10000).toFixed(0)}</span>
+                </div>
+
+                <div className="w-full mb-3">
+                  <div className="flex justify-between items-end mb-2 px-1">
+                    <span className="text-xs font-mono text-[#888888]">{stage}</span>
+                    <span className="text-xs font-mono text-white">{progress.toFixed(0)}%</span>
+                  </div>
+                  
+                  {/* Progress Bar Container */}
+                  <div className="h-1 w-full bg-[#333333] rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-white relative shadow-[0_0_8px_rgba(255,255,255,0.4)] transition-all duration-300 ease-out"
+                      style={{ width: `${progress}%` }}
+                    ></div>
+                  </div>
+                  
+                  <div className="flex justify-between mt-2 px-1">
+                    <span className="text-[10px] text-[#888888] font-mono">PHASE 2/4</span>
+                    <span className="text-[10px] text-[#888888] font-mono">~12s REMAINING</span>
+                  </div>
+                </div>
+
+                <p className="text-sm text-[#888888] mt-6 leading-relaxed max-w-xs mx-auto">
+                  Please wait while our AI breaks down the complexity and identifies optimization patterns.
+                </p>
+
+                <div className="mt-8 w-full pt-6 border-t border-[#333333]">
+                  <button 
+                    onClick={() => setAnalyzing(false)}
+                    className="group w-full flex items-center justify-center gap-2 px-4 py-2 rounded bg-transparent border border-[#333333] text-[#888888] hover:text-white hover:border-[#888888] hover:bg-white/5 transition-all focus:outline-none focus:ring-1 focus:ring-white"
+                  >
+                    <X size={16} />
+                    <span className="text-xs font-mono font-medium">CANCEL_ANALYSIS</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+
       </main>
     </div>
   );
