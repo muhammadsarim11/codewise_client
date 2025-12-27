@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
-import Editor, {} from '@monaco-editor/react'; // Import Monaco Editor
+import Editor  from '@monaco-editor/react';
 import { 
   ArrowLeft, 
   Bot, 
@@ -19,7 +19,10 @@ import {
   List,
   Terminal,
   Puzzle,
-  Code2
+  Code2,
+  Check,
+  X,
+  Copy
 } from 'lucide-react';
 
 // Updated Interface matching your backend JSON
@@ -45,6 +48,7 @@ interface ExplanationData {
   keyPoints: string[];
   status: string;
   isPublic: boolean;
+  publicShareId?: string; // Added to interface
 }
 
 export default function ExplanationResult() {
@@ -54,11 +58,14 @@ export default function ExplanationResult() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
+  // Share State
+  const [shareLoading, setShareLoading] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareLink, setShareLink] = useState('');
+  const [copied, setCopied] = useState(false);
+  
   // Polling State
   const [isPolling, setIsPolling] = useState(true);
-
-  // Tab State for Right Panel (optional, but good for mobile)
-  const [activeTab, setActiveTab] = useState<'overview' | 'improvements' | 'complexity'>('overview');
 
   const fetchExplanation = useCallback(async () => {
     try {
@@ -124,133 +131,172 @@ export default function ExplanationResult() {
   }, [isPolling, fetchExplanation]);
 
   // --- ACTIONS ---
-  
+
+  // 1. PDF EXPORT
   const handleExport = () => {
     if (!data) return;
     
-    const { fileName, explanationDoc, improvements, keyPoints, complexity, language } = data;
-    
-    // Construct Markdown Content
-    const markdownContent = `
-# Analysis Report: ${fileName || 'code snippet'}
-**Language:** ${language}
-**Generated:** ${new Date().toLocaleString()}
+    // Dynamic import for jspdf
+    import('jspdf').then(({ default: jsPDF }) => {
+      const doc = new jsPDF();
+      const margin = 15;
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const maxLineWidth = pageWidth - (margin * 2);
+      let yPos = margin;
+      const lineHeight = 6;
 
-## 1. Overview
-${explanationDoc.overview}
+      const checkPageBreak = (spaceNeeded: number) => {
+        if (yPos + spaceNeeded >= doc.internal.pageSize.getHeight() - margin) {
+          doc.addPage();
+          yPos = margin;
+        }
+      };
 
-## 2. Key Takeaways
-${keyPoints.map(p => `- ${p.replace(/^- /, '')}`).join('\n')}
+      const addSection = (title: string, body: string) => {
+        checkPageBreak(15);
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(40, 40, 40);
+        doc.text(title, margin, yPos);
+        yPos += 8;
 
-## 3. Logic Flow
-${explanationDoc.logicFlow}
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(60, 60, 60);
+        
+        const lines = doc.splitTextToSize(body || "N/A", maxLineWidth);
+        checkPageBreak(lines.length * lineHeight);
+        doc.text(lines, margin, yPos);
+        yPos += (lines.length * lineHeight) + 10;
+      };
 
-## 4. Function Breakdown
-${explanationDoc.functionBreakdown}
+      // Header
+      doc.setFontSize(22);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(0, 0, 0);
+      doc.text("Analysis Report", margin, yPos);
+      yPos += 10;
 
-## 5. Complexity Analysis
-${complexity}
+      // Meta
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(100, 100, 100);
+      doc.text(`File: ${data.fileName || 'snippet'}`, margin, yPos);
+      yPos += 5;
+      doc.text(`Language: ${data.language}`, margin, yPos);
+      yPos += 15;
 
-## 6. Improvements
-${improvements.map(i => `- ${i}`).join('\n')}
+      // Sections
+      addSection("1. Overview", data.explanationDoc.overview);
+      
+      const keyPointsText = data.keyPoints.map(p => `• ${p.replace(/^- /, '')}`).join('\n');
+      addSection("2. Key Takeaways", keyPointsText);
 
-## 7. Usage Example
-\`\`\`${language}
-${explanationDoc.usageExample}
-\`\`\`
-    `.trim();
+      addSection("3. Logic Flow", data.explanationDoc.logicFlow);
+      addSection("4. Function Breakdown", data.explanationDoc.functionBreakdown);
+      addSection("5. Complexity", data.complexity);
 
-    const blob = new Blob([markdownContent], { type: 'text/markdown' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${fileName ? fileName.split('.')[0] : 'analysis'}_report.md`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+      const improvementsText = data.improvements.map(i => `• ${i}`).join('\n');
+      addSection("6. Improvements", improvementsText);
+      
+      doc.save(`${data.fileName ? data.fileName.split('.')[0] : 'analysis'}_report.pdf`);
+    }).catch(err => {
+      console.error(err);
+      alert("Failed to load PDF generator. Please try again.");
+    });
+  };
+
+  // 2. SHARE HANDLER
+  const handleShare = async () => {
+    if (!data) return;
+    setShareLoading(true);
+
+    try {
+      const token = localStorage.getItem('accessToken');
+      
+      // If already public and we have the ID locally, just show it (optimization)
+      if (data.isPublic && data.publicShareId) {
+         const url = `${window.location.origin}/share/${data.publicShareId}`;
+         setShareLink(url);
+         setShowShareModal(true);
+         setShareLoading(false);
+         return;
+      }
+
+      // Otherwise call backend to enable sharing/get ID
+      const response = await axios.patch(`http://localhost:5000/explainations/${data.id}/share`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      const shareId = response.data.shareId || response.data.publicShareId;
+      if (shareId) {
+        const url = `${window.location.origin}/share/${shareId}`;
+        setShareLink(url);
+        setShowShareModal(true);
+        // Update local state so we don't need to hit API again immediately
+        setData(prev => prev ? { ...prev, isPublic: true, publicShareId: shareId } : null);
+      } else {
+        alert("Failed to generate share link");
+      }
+
+    } catch (error: any) {
+      console.error("Share error:", error);
+      alert(error.response?.data?.message || "Failed to share");
+    } finally {
+      setShareLoading(false);
+    }
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(shareLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   // --- RENDERING HELPERS ---
 
-  // Custom styling for scrollbars (still useful for the right panel)
   const GlobalStyles = () => (
     <style jsx global>{`
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #0a0a0a; 
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #2a2a2a; 
-        border-radius: 5px;
-        border: 2px solid #0a0a0a;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #444; 
-      }
-      /* Hide scrollbar for code editor feel but keep functionality */
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
-      .no-scrollbar {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
-      }
+      ::-webkit-scrollbar { width: 10px; height: 10px; }
+      ::-webkit-scrollbar-track { background: #0a0a0a; }
+      ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 5px; border: 2px solid #0a0a0a; }
+      ::-webkit-scrollbar-thumb:hover { background: #444; }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     `}</style>
   );
 
-  // Monaco Editor Wrapper
   const CodeEditorView = ({ code, language }: { code: string, language: string }) => {
-    const handleEditorDidMount = (editor: any, monaco: any) => {
-      // Define a custom theme that matches the app's #050505 / #1e1e1e aesthetic
-      monaco.editor.defineTheme('codewise-dark', {
-        base: 'vs-dark',
-        inherit: true,
-        rules: [],
-        colors: {
-          'editor.background': '#050505', // Seamless blend with container
-          'editor.lineHighlightBackground': '#111111',
-          'editorLineNumber.foreground': '#555555',
-          'editorGutter.background': '#050505',
-          'scrollbarSlider.background': '#333333',
-          'scrollbarSlider.hoverBackground': '#444444',
-          'scrollbarSlider.activeBackground': '#555555',
-        }
-      });
-      monaco.editor.setTheme('codewise-dark');
-    };
-
     return (
       <Editor
         height="100%"
         language={language || 'javascript'}
         value={code}
-        theme="vs-dark" // Initial fallback, overridden by onMount
-        onMount={handleEditorDidMount}
+        theme="vs-dark"
         options={{
           readOnly: true,
-          minimap: { enabled: false }, // Cleaner look
-          scrollBeyondLastLine: false,
+          minimap: { enabled: false },
           fontSize: 13,
           fontFamily: 'JetBrains Mono, monospace',
           renderLineHighlight: 'none',
           padding: { top: 20, bottom: 20 },
-          lineNumbersMinChars: 3,
-          glyphMargin: false,
-          folding: true,
-          smoothScrolling: true,
-          cursorStyle: 'line', // Even though readOnly, keeps it clean
-          domReadOnly: true, // Prevents mobile keyboard popping up
+          scrollBeyondLastLine: false,
+          domReadOnly: true
         }}
-        loading={
-          <div className="flex items-center justify-center h-full text-gray-500 font-mono text-sm">
-            <Bot className="animate-spin mr-2 w-4 h-4" /> Loading Editor...
-          </div>
-        }
+        onMount={(editor, monaco) => {
+          monaco.editor.defineTheme('codewise-dark', {
+            base: 'vs-dark',
+            inherit: true,
+            rules: [],
+            colors: {
+              'editor.background': '#050505',
+              'editor.lineHighlightBackground': '#111111',
+              'editorGutter.background': '#050505',
+            }
+          });
+          monaco.editor.setTheme('codewise-dark');
+        }}
+        loading={<div className="flex items-center justify-center h-full text-gray-500 font-mono text-sm">Loading Editor...</div>}
       />
     );
   };
@@ -279,25 +325,16 @@ ${explanationDoc.usageExample}
   const status = data?.status?.toLowerCase();
   const isFinished = status === 'completed' || status === 'done' || status === 'success' || status === 'failed';
   
-  // Loading State
   if (loading || (data && !isFinished)) {
     return (
       <div className="min-h-screen bg-[#000000] font-sans flex flex-col items-center justify-center p-6">
           <GlobalStyles />
-          <div 
-            className="fixed inset-0 z-0 pointer-events-none opacity-20" 
-            style={{
-              backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)',
-              backgroundSize: '40px 40px'
-            }}
-          />
+          <div className="fixed inset-0 z-0 pointer-events-none opacity-20" style={{ backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
           <div className="w-full max-w-[440px] bg-[#111111] border border-[#333333] rounded-md shadow-2xl overflow-hidden relative z-10">
             <div className="p-8 flex flex-col items-center text-center">
               <div className="mb-6 relative">
                 <div className="relative bg-black rounded-full p-4 border border-[#333333]">
-                  <div className="animate-spin-slow">
-                     <Bot className="w-8 h-8 text-white" />
-                  </div>
+                  <div className="animate-spin-slow"><Bot className="w-8 h-8 text-white" /></div>
                 </div>
               </div>
               <h2 className="text-lg font-medium text-white mb-2 tracking-tight">
@@ -334,7 +371,7 @@ ${explanationDoc.usageExample}
       
       {/* Navbar */}
       <header className="flex-none border-b border-[#333333] bg-[#000000] z-20">
-        <div className="px-6 py-3 flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => router.push('/')}
@@ -346,40 +383,46 @@ ${explanationDoc.usageExample}
             <div className="flex flex-col">
                <h1 className="text-sm font-semibold tracking-tight text-white flex items-center gap-2">
                  <FileCode size={14} className="text-indigo-400" />
-                 {data?.fileName || 'snippet.js'}
+                 <span className="truncate max-w-[120px] sm:max-w-xs">{data?.fileName || 'snippet.js'}</span>
                </h1>
-               <span className="text-[10px] font-mono text-[#888888]">
+               <span className="hidden sm:inline text-[10px] font-mono text-[#888888]">
                  Processed by {data?.aiModel || 'AI'} • {new Date(data?.createdAt || Date.now()).toLocaleDateString()}
                </span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-             <div className="flex items-center gap-2 mr-4">
+             <div className="hidden md:flex items-center gap-2 mr-4">
                <span className="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">
                    <CheckCircle2 size={10} /> COMPLETE
                </span>
              </div>
-             <button className="flex items-center gap-2 px-3 py-1.5 rounded-sm border border-[#333] text-xs font-mono text-[#888888] hover:text-white hover:bg-[#111] transition-all">
+             
+             <button 
+                onClick={handleShare}
+                disabled={shareLoading}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-sm border border-[#333] text-xs font-mono text-[#888888] hover:text-white hover:bg-[#111] transition-all disabled:opacity-50"
+             >
                 <Share2 size={14} />
                 <span className="hidden sm:inline">SHARE</span>
              </button>
+
              <button 
                 onClick={handleExport}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-sm bg-white text-black border border-white text-xs font-mono font-medium hover:bg-gray-200 transition-all active:scale-95"
              >
                 <Download size={14} />
-                <span className="hidden sm:inline">EXPORT</span>
+                <span className="hidden sm:inline">PDF</span>
              </button>
           </div>
         </div>
       </header>
 
       {/* Main Content - Split View */}
-      <main className="flex-1 flex overflow-hidden">
+      <main className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         
         {/* LEFT PANEL: CODE VIEWER (Monaco Editor) */}
-        <div className="w-1/2 border-r border-[#333333] flex flex-col bg-[#050505] relative group">
+        <div className="w-full lg:w-1/2 h-1/2 lg:h-auto border-b lg:border-b-0 lg:border-r border-[#333333] flex flex-col bg-[#050505] relative group">
            {/* Editor Header */}
            <div className="flex-none px-4 py-2 bg-[#050505] border-b border-[#252526] flex items-center justify-between">
               <span className="text-xs font-mono text-[#969696] uppercase tracking-wider flex items-center gap-2">
@@ -400,7 +443,7 @@ ${explanationDoc.usageExample}
         </div>
 
         {/* RIGHT PANEL: ANALYSIS REPORT */}
-        <div className="w-1/2 flex flex-col bg-[#050505]">
+        <div className="w-full lg:w-1/2 h-1/2 lg:h-auto flex flex-col bg-[#050505]">
            <div className="flex-none px-6 py-3 border-b border-[#333333] bg-[#050505]">
               <h2 className="text-sm font-medium text-white flex items-center gap-2">
                  <Bot size={16} className="text-indigo-400" /> 
@@ -501,7 +544,7 @@ ${explanationDoc.usageExample}
               </section>
 
               {/* 5. Complexity & Improvements Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-5 duration-500 delay-300">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-5 duration-500 delay-300">
                  {/* Improvements */}
                  <section className="flex flex-col h-full">
                     <div className="flex items-center gap-2 mb-3">
@@ -551,6 +594,34 @@ ${explanationDoc.usageExample}
 
            </div>
         </div>
+
+        {/* Share Modal */}
+        {showShareModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-md p-4">
+             <div className="bg-[#111] border border-[#333] rounded-lg w-full max-w-sm p-6 shadow-2xl animate-in zoom-in-95">
+                <div className="flex justify-between items-center mb-4">
+                   <h3 className="text-white font-medium">Share Analysis</h3>
+                   <button onClick={() => setShowShareModal(false)} className="text-[#666] hover:text-white"><X size={18} /></button>
+                </div>
+                <p className="text-xs text-[#888] mb-4">Anyone with this link can view this analysis report.</p>
+                
+                <div className="flex gap-2">
+                   <input 
+                     type="text" 
+                     readOnly 
+                     value={shareLink}
+                     className="flex-1 bg-black border border-[#333] rounded px-3 text-xs text-[#ccc] focus:outline-none"
+                   />
+                   <button 
+                     onClick={copyToClipboard}
+                     className="p-2 bg-indigo-600 text-white rounded hover:bg-indigo-500 transition-colors"
+                   >
+                     {copied ? <Check size={16} /> : <Copy size={16} />}
+                   </button>
+                </div>
+             </div>
+          </div>
+        )}
 
       </main>
     </div>

@@ -134,7 +134,7 @@ function SignInForm() {
         <p className="text-center text-sm text-gray-500">
           Don&apos;t have an account?{' '}
           {/* Linked to /register to match the file created previously */}
-          <Link href="/register" className="text-white hover:underline">
+          <Link href="/users/signup" className="text-white hover:underline">
             Sign up
           </Link>
         </p>

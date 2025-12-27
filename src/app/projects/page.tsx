@@ -48,6 +48,10 @@ export default function ProjectsView() {
   const [projectName, setProjectName] = useState('');
   const [projectDesc, setProjectDesc] = useState('');
 
+  // Delete confirmation modal state
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
+
   // Selected Project State (History View)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [projectExplanations, setProjectExplanations] = useState<Explanation[]>([]);
@@ -139,19 +143,33 @@ export default function ProjectsView() {
     }
   };
 
-  const handleDeleteProject = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this project?")) return;
+  // Open the themed delete confirmation modal
+  const openDeleteModal = (project: Project, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setProjectToDelete(project);
+    setShowDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setProjectToDelete(null);
+    setShowDeleteModal(false);
+  };
+
+  const confirmDeleteProject = async () => {
+    if (!projectToDelete) return;
     try {
       const token = localStorage.getItem('accessToken');
-      await axios.delete(`http://localhost:5000/projects/delete/${id}`, {
+      await axios.delete(`http://localhost:5000/projects/delete/${projectToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setProjects(prev => prev.filter(p => p.id !== id));
-      if (selectedProject?.id === id) handleBackToProjects();
+      setProjects(prev => prev.filter(p => p.id !== projectToDelete.id));
+      if (selectedProject?.id === projectToDelete.id) handleBackToProjects();
     } catch (error: any) {
       alert("Failed to delete project");
+    } finally {
+      closeDeleteModal();
     }
-  };
+  }; 
 
   const handleShare = async (e: React.MouseEvent, explanationId: string) => {
     e.stopPropagation();
@@ -235,28 +253,30 @@ export default function ProjectsView() {
       <div className="w-full max-w-5xl mx-auto h-full flex flex-col animate-in fade-in zoom-in duration-300 pb-10">
         
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
+          <div className="flex items-start md:items-center gap-3 md:gap-4 w-full">
             <button 
               onClick={handleBackToProjects}
               className="p-2 rounded-full hover:bg-[#111] border border-transparent hover:border-[#333] transition-all text-[#888] hover:text-white"
             >
               <ArrowLeft size={20} />
             </button>
-            <div>
+            <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <Folder size={18} className="text-indigo-400" />
-                <h1 className="text-xl font-semibold tracking-tight text-white">{selectedProject.name}</h1>
+                <h1 className="text-lg md:text-xl font-semibold tracking-tight text-white truncate">{selectedProject.name}</h1>
               </div>
-              <p className="text-[#888] text-xs font-mono mt-1 line-clamp-1">{selectedProject.description}</p>
+              <p className="text-[#888] text-[11px] md:text-xs font-mono mt-1 line-clamp-1">{selectedProject.description}</p>
             </div>
           </div>
 
           <button 
             onClick={handleAnalyzeNew}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-500/20"
+            className="flex items-center gap-2 px-4 md:px-5 py-2 bg-indigo-600 text-white rounded-md text-sm md:text-sm font-medium hover:bg-indigo-500 transition-colors shadow-md md:shadow-lg shadow-indigo-500/20 w-full md:w-auto min-w-[140px] justify-center whitespace-nowrap"
           >
-            <Plus size={16} /> New Analysis
+            <Plus size={16} />
+            <span className="hidden md:inline">New Analysis</span>
+            <span className="md:hidden">Analyze</span>
           </button>
         </div>
 
@@ -330,7 +350,7 @@ export default function ProjectsView() {
 
         {/* --- SHARE MODAL --- */}
         {shareModalData && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-md p-4">
              <div className="bg-[#111] border border-[#333] rounded-lg w-full max-w-sm p-6 shadow-2xl animate-in zoom-in-95">
                 <div className="flex justify-between items-center mb-4">
                    <h3 className="text-white font-medium">Share Analysis</h3>
@@ -355,6 +375,22 @@ export default function ProjectsView() {
              </div>
           </div>
         )}
+
+        {/* --- DELETE CONFIRMATION MODAL (Selected Project) --- */}
+        {showDeleteModal && projectToDelete && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-md p-4">
+            <div className="bg-[#111] border border-[#333] rounded-lg w-full max-w-sm p-6 shadow-2xl animate-in zoom-in-95">
+              <div className="mb-4">
+                <h3 className="text-white font-medium">Delete Project</h3>
+              </div>
+              <p className="text-sm text-[#888] mb-6">Are you sure you want to delete <strong className="text-white">{projectToDelete.name}</strong>? This action cannot be undone.</p>
+              <div className="flex justify-end gap-3">
+                <button onClick={closeDeleteModal} className="px-4 py-2 text-sm text-[#888] hover:text-white">Cancel</button>
+                <button onClick={confirmDeleteProject} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition-colors">Delete</button>
+              </div>
+            </div>
+          </div>
+        )} 
 
       </div>
     );
@@ -414,12 +450,12 @@ export default function ProjectsView() {
                         <button 
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleDeleteProject(project.id);
+                            openDeleteModal(project, e);
                           }}
                           className="p-1.5 hover:bg-[#333] rounded text-[#888] hover:text-red-400"
                         >
                           <Trash2 size={14} />
-                        </button>
+                        </button> 
                      </div>
                   </div>
                   <h3 className="text-white font-medium mb-1 truncate">{project.name}</h3>
@@ -433,9 +469,25 @@ export default function ProjectsView() {
          </div>
        )}
 
+       {/* --- DELETE CONFIRMATION MODAL (List View) --- */}
+       {showDeleteModal && projectToDelete && (
+         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-md p-4">
+           <div className="bg-[#111] border border-[#333] rounded-lg w-full max-w-sm p-6 shadow-2xl animate-in zoom-in-95">
+             <div className="mb-4">
+               <h3 className="text-white font-medium">Delete Project</h3>
+             </div>
+             <p className="text-sm text-[#888] mb-6">Are you sure you want to delete <strong className="text-white">{projectToDelete.name}</strong>? This action cannot be undone.</p>
+             <div className="flex justify-end gap-3">
+               <button onClick={closeDeleteModal} className="px-4 py-2 text-sm text-[#888] hover:text-white">Cancel</button>
+               <button onClick={confirmDeleteProject} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition-colors">Delete</button>
+             </div>
+           </div>
+         </div>
+       )} 
+
        {/* --- PROJECT MODAL --- */}
        {showProjectModal && (
-           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-md p-4">
               <div className="bg-[#111] border border-[#333] rounded-lg w-full max-w-md shadow-2xl animate-in zoom-in-95 duration-200">
                  <div className="flex items-center justify-between p-4 border-b border-[#333]">
                     <h3 className="text-white font-medium">{isEditing ? 'Edit Project' : 'New Project'}</h3>
@@ -443,17 +495,6 @@ export default function ProjectsView() {
                  </div>
                  <form onSubmit={isEditing ? handleEditProject : handleCreateProject} className="p-6 space-y-4">
                     <div className="space-y-1">
-                       <label className="text-xs font-mono text-[#888] uppercase">Project Name</label>
-                       <input 
-                         type="text" 
-                         required
-                         minLength={3}
-                         value={projectName}
-                         onChange={e => setProjectName(e.target.value)}
-                         placeholder="My Awesome Project"
-                         className="w-full bg-black border border-[#333] rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-white transition-colors"
-                       />
-                    </div>
                     <div className="space-y-1">
                        <label className="text-xs font-mono text-[#888] uppercase">Description</label>
                        <textarea 
@@ -480,6 +521,7 @@ export default function ProjectsView() {
                          {isEditing ? 'Save Changes' : 'Create Project'}
                        </button>
                     </div>
+                 </div>
                  </form>
               </div>
            </div>

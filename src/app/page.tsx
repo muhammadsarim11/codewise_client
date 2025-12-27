@@ -11,10 +11,12 @@ import {
   Code2, 
   ArrowRight,
   LogOut,
-  Folder
+  Folder,
+  Menu
 } from 'lucide-react';
-// Import the component
-import ProjectsView from "./projects/page"
+// Import Components
+import ProjectsView from './projects/page';
+import LandingPage from './landing/page'; // Import the Landing Page
 
 // Language Options
 const LANGUAGES = [
@@ -35,10 +37,14 @@ const LANGUAGES = [
 export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams(); 
+  
+  // Auth & User State
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
   
   // Navigation State
   const [activePage, setActivePage] = useState('dashboard'); 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Dashboard Input State
   const [activeTab, setActiveTab] = useState<'upload' | 'paste'>('upload');
@@ -52,23 +58,25 @@ export default function Home() {
   // Project Context State
   const [linkedProjectId, setLinkedProjectId] = useState<string | null>(null);
 
-  // Auth Check & URL State Restore
+  // --- Auth Check & Initialization ---
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     const storedUser = localStorage.getItem('user');
 
-    if (!token) {
-      router.push('/users/signin');
-    } else if (storedUser) {
+    if (token && storedUser) {
+      // User is logged in
       setUser(JSON.parse(storedUser));
-    }
+      setIsAuthenticated(true);
 
-    // Check for Project Context in URL
-    const paramProjectId = searchParams.get('projectId');
-    if (paramProjectId) {
-      setLinkedProjectId(paramProjectId);
-      // Stay on 'dashboard' to perform analysis, but visual cue will be added
-      setActivePage('dashboard'); 
+      // Check for Project Context in URL (Deep Linking)
+      const paramProjectId = searchParams.get('projectId');
+      if (paramProjectId) {
+        setLinkedProjectId(paramProjectId);
+        setActivePage('dashboard'); 
+      }
+    } else {
+      // User is visitor
+      setIsAuthenticated(false);
     }
   }, [router, searchParams]);
 
@@ -116,7 +124,6 @@ export default function Home() {
     const formData = new FormData();
     formData.append('file', fileToSend);
     
-    // CRITICAL: Attach the project ID if it exists in the context
     if (linkedProjectId) {
       formData.append('projectId', linkedProjectId);
     }
@@ -164,10 +171,31 @@ export default function Home() {
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
-    router.push('/users/signin');
+    setIsAuthenticated(false);
+    setUser(null);
+    router.push('/'); // Reset to root (Landing Page)
   };
 
-  if (!user) return null;
+  const navTo = (page: string) => {
+    setActivePage(page);
+    setIsMobileMenuOpen(false);
+    if (page === 'dashboard') router.push('/');
+  };
+
+  // --- RENDER LOGIC ---
+
+  // 1. Loading State (prevent flash)
+  if (isAuthenticated === null) {
+    return null; // Or a sleek loading spinner
+  }
+
+  // 2. Visitor View -> Render Landing Page
+  if (!isAuthenticated) {
+    return <LandingPage />;
+  }
+
+  // 3. Authenticated View -> Render Dashboard
+  if (!user) return null; // Safety check
 
   return (
     <div className="min-h-screen bg-[#000000] font-sans text-white flex flex-col overflow-x-hidden selection:bg-white selection:text-black">
@@ -182,10 +210,11 @@ export default function Home() {
       />
 
       {/* Header (Top Navigation) */}
-      <header className="relative z-10 w-full border-b border-[#333333] bg-[#000000]/80 backdrop-blur-md">
+      <header className="relative z-20 w-full border-b border-[#333333] bg-[#000000]/80 backdrop-blur-md">
         <div className="px-6 md:px-10 py-4 flex items-center justify-between">
           
-          <div className="flex items-center gap-3">
+          {/* Logo */}
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => navTo('dashboard')}>
             <div className="size-6 text-white">
               <svg className="w-full h-full" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                 <path clipRule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fillRule="evenodd"></path>
@@ -195,34 +224,18 @@ export default function Home() {
             <h1 className="text-sm font-semibold tracking-tight text-white font-mono">CodeWise</h1>
           </div>
 
-          <div className="flex items-center gap-6">
-            <nav className="hidden md:flex gap-6">
-              <button 
-                onClick={() => { setActivePage('dashboard'); router.push('/'); }} 
-                className={`text-xs font-mono transition-colors flex items-center gap-1 ${activePage === 'dashboard' ? 'text-white' : 'text-[#888] hover:text-white'}`}
-              >
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-6">
+            <nav className="flex gap-6">
+              <button onClick={() => navTo('dashboard')} className={`text-xs font-mono transition-colors flex items-center gap-1 ${activePage === 'dashboard' ? 'text-white' : 'text-[#888] hover:text-white'}`}>
                 /dashboard
               </button>
-              <button 
-                onClick={() => setActivePage('projects')}
-                className={`text-xs font-mono transition-colors flex items-center gap-1 ${activePage === 'projects' ? 'text-white' : 'text-[#888] hover:text-white'}`}
-              >
+              <button onClick={() => navTo('projects')} className={`text-xs font-mono transition-colors flex items-center gap-1 ${activePage === 'projects' ? 'text-white' : 'text-[#888] hover:text-white'}`}>
                 /projects
               </button>
-              <button 
-                onClick={() => setActivePage('recent')}
-                className={`text-xs font-mono transition-colors flex items-center gap-1 ${activePage === 'recent' ? 'text-white' : 'text-[#888] hover:text-white'}`}
-              >
-                /recent
-              </button>
-              <button 
-                onClick={() => setActivePage('settings')}
-                className={`text-xs font-mono transition-colors flex items-center gap-1 ${activePage === 'settings' ? 'text-white' : 'text-[#888] hover:text-white'}`}
-              >
-                /settings
-              </button>
+           
             </nav>
-            <div className="h-6 w-[1px] bg-[#333333] hidden md:block"></div>
+            <div className="h-6 w-[1px] bg-[#333333]"></div>
             
             <button onClick={handleLogout} className="group flex items-center gap-2 rounded-full pr-3 pl-1 py-1 bg-[#111111] border border-[#333333] hover:border-[#888888] transition-all">
               <div className="size-6 rounded-full bg-[#333] flex items-center justify-center text-[10px] font-mono">
@@ -231,7 +244,30 @@ export default function Home() {
               <span className="text-xs font-mono text-[#888888] group-hover:text-white">Logout</span>
             </button>
           </div>
+
+          {/* Mobile Menu Button */}
+          <button 
+            className="md:hidden text-white p-2"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
+
+        {/* Mobile Nav Dropdown */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 w-full bg-[#050505] border-b border-[#333] animate-in slide-in-from-top-2">
+            <nav className="flex flex-col p-4 space-y-4">
+              <button onClick={() => navTo('dashboard')} className={`text-sm font-mono text-left px-2 ${activePage === 'dashboard' ? 'text-white' : 'text-[#888]'}`}>/dashboard</button>
+              <button onClick={() => navTo('projects')} className={`text-sm font-mono text-left px-2 ${activePage === 'projects' ? 'text-white' : 'text-[#888]'}`}>/projects</button>
+              <button onClick={() => navTo('settings')} className={`text-sm font-mono text-left px-2 ${activePage === 'settings' ? 'text-white' : 'text-[#888]'}`}>/settings</button>
+              <div className="h-[1px] bg-[#333] w-full my-2"></div>
+              <button onClick={handleLogout} className="text-sm font-mono text-left text-red-400 px-2 flex items-center gap-2">
+                <LogOut size={14} /> Logout
+              </button>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Main Content */}
@@ -244,12 +280,12 @@ export default function Home() {
 
         {/* VIEW: DASHBOARD (Home) */}
         {activePage === 'dashboard' && (
-          <div className="flex-1 flex flex-col items-center justify-center">
+          <div className="flex-1 flex flex-col items-center justify-center min-h-[calc(100vh-100px)]">
             
             {!analyzing ? (
               <>
-                <div className="mb-8 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <h1 className="text-2xl font-semibold tracking-tight text-white mb-2">Ready to Optimize?</h1>
+                <div className="mb-8 text-center animate-in fade-in slide-in-from-bottom-4 duration-500 px-4">
+                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white mb-2">Ready to Optimize?</h1>
                     
                     {linkedProjectId ? (
                       <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#111] border border-indigo-500/50 text-indigo-400 text-xs font-mono mb-2 animate-in zoom-in">
@@ -262,7 +298,7 @@ export default function Home() {
                 </div>
 
                 {/* --- DASHBOARD INPUT UI --- */}
-                <div className="w-full max-w-[600px] bg-[#111111] border border-[#333333] rounded-lg shadow-2xl overflow-hidden relative animate-in fade-in zoom-in duration-300">
+                <div className="w-full max-w-full sm:max-w-[600px] bg-[#111111] border border-[#333333] rounded-lg shadow-2xl overflow-hidden relative animate-in fade-in zoom-in duration-300">
                   
                   {/* Tab Navigation */}
                   <div className="flex border-b border-[#333333]">
@@ -280,7 +316,7 @@ export default function Home() {
                     </button>
                   </div>
 
-                  <div className="p-8">
+                  <div className="p-6 sm:p-8">
                       {activeTab === 'upload' ? (
                         // UPLOAD VIEW
                         <div className="flex flex-col items-center text-center">
@@ -301,7 +337,7 @@ export default function Home() {
                                 className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer" 
                               />
                               <div className={`
-                                border border-dashed rounded-md p-8 flex flex-col items-center justify-center gap-3 transition-all h-40
+                                border border-dashed rounded-md p-8 flex flex-col items-center justify-center gap-3 transition-all h-32 sm:h-40
                                 ${file ? 'border-white/40 bg-white/5' : 'border-[#333333] bg-black group-hover:border-[#555]'}
                               `}>
                                 {file ? (
@@ -328,7 +364,7 @@ export default function Home() {
                         </div>
                       ) : (
                         // PASTE CODE VIEW
-                        <div className="flex flex-col h-[420px]">
+                        <div className="flex flex-col h-[350px] sm:h-[420px]">
                           <div className="flex justify-between items-center mb-4">
                             <label className="text-xs font-mono text-[#888888] uppercase">Language</label>
                             <div className="relative">
@@ -380,7 +416,7 @@ export default function Home() {
               </>
             ) : (
               // --- LOADING STATE (Matches Design) ---
-              <div className="w-full max-w-[440px] bg-[#111111] border border-[#333333] rounded-md shadow-2xl overflow-hidden relative">
+              <div className="w-full max-w-[440px] bg-[#111111] border border-[#333333] rounded-md shadow-2xl overflow-hidden relative mx-4">
                 <div className="p-8 flex flex-col items-center text-center">
                   <div className="mb-6 relative">
                     <div className="relative bg-black rounded-full p-4 border border-[#333333]">

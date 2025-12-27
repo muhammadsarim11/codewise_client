@@ -8,678 +8,103 @@
    - Network:      http://192.168.1.10:3000
 
  ✓ Starting...
- ✓ Ready in 6.9s
- ○ Compiling /_not-found/page ...
- GET /forgot-password 404 in 14.2s (compile: 13.0s, render: 1245ms)
- ✓ Compiled in 1158ms
- GET /forgot-password 404 in 422ms (compile: 112ms, render: 310ms)
- GET /forgotpassword 404 in 201ms (compile: 44ms, render: 157ms)
- GET /forgotpassword 404 in 272ms (compile: 18ms, render: 254ms)
- GET /forgot-password 404 in 136ms (compile: 19ms, render: 117ms)
- ○ Compiling /users/signin ...
- GET / 200 in 5.3s (compile: 5.0s, render: 292ms)
- GET / 200 in 239ms (compile: 12ms, render: 227ms)
- GET /users/signin 200 in 121ms (compile: 25ms, render: 96ms)
- GET / 200 in 157ms (compile: 27ms, render: 130ms)
- GET /users/signin 200 in 259ms (compile: 9ms, render: 249ms)
- GET /forgotpassword 404 in 61ms (compile: 12ms, render: 49ms)
- GET /forgotpassword 404 in 211ms (compile: 23ms, render: 188ms)
- GET /forgotpassword 404 in 211ms (compile: 19ms, render: 192ms)
- GET /users/forgotpassword 200 in 1913ms (compile: 1534ms, render: 380ms)
- GET /users/signin 200 in 444ms (compile: 358ms, render: 86ms)
- GET / 200 in 139ms (compile: 24ms, render: 115ms)
- GET /?projectId=5be75f07-e803-43ba-bd77-40da1111cc98 200 in 75ms (compile: 14ms, render: 61ms)
- GET /explanation/cmi2xg7kr0002v0foibk7q25q 200 in 5.2s (compile: 5.0s, render: 259ms)
- GET /explanation/cmi2xg7kr0002v0foibk7q25q 200 in 135ms (compile: 25ms, render: 110ms)
- GET /explanation/cmi2xg7kr0002v0foibk7q25q 200 in 669ms (compile: 39ms, render: 630ms)
- GET /explanation/cmi2xg7kr0002v0foibk7q25q 200 in 354ms (compile: 54ms, render: 300ms)
- GET /users/forgotpassword 200 in 141ms (compile: 26ms, render: 115ms)
- GET /forgotpassword 404 in 155ms (compile: 20ms, render: 135ms)
- GET /f 404 in 252ms (compile: 52ms, render: 200ms)
- GET / 200 in 227ms (compile: 18ms, render: 209ms)
- GET /?projectId=d980c778-1c70-4f08-b87c-09e1cc9f19ec 200 in 58ms (compile: 9ms, render: 49ms)
- GET /explanation/cmjo2ybs60002v0jor7893xcc 200 in 127ms (compile: 38ms, render: 89ms)
- GET / 200 in 48ms (compile: 15ms, render: 32ms)
- GET /?projectId=1005ed22-6153-4bc7-afc6-91ade9e9c9e3 200 in 77ms (compile: 10ms, render: 66ms)
- GET / 200 in 59ms (compile: 7ms, render: 52ms)
- GET /explanation/cmjoacu030002v098eulr2pb2 200 in 261ms (compile: 48ms, render: 212ms)
- GET / 200 in 66ms (compile: 11ms, render: 55ms)
- GET /?projectId=1005ed22-6153-4bc7-afc6-91ade9e9c9e3 200 in 79ms (compile: 9ms, render: 70ms)
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m'./components/ProjectsView'[39m[33m;[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 18 |[39m
- [90m 19 |[39m [90m// Language Options[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [[0m
+ ✓ Ready in 4.3s
+ ○ Compiling / ...
+ GET / 200 in 17.8s (compile: 16.4s, render: 1442ms)
+ GET / 200 in 114ms (compile: 25ms, render: 88ms)
+ GET / 200 in 81ms (compile: 12ms, render: 70ms)
+ GET / 200 in 78ms (compile: 14ms, render: 64ms)
+ GET /users/signup 200 in 2.9s (compile: 2.6s, render: 299ms)
+ GET /docs 200 in 1943ms (compile: 1861ms, render: 82ms)
+ GET /users/signup 200 in 72ms (compile: 9ms, render: 64ms)
+ GET / 200 in 54ms (compile: 12ms, render: 42ms)
+ ✓ Compiled in 557ms
+ GET /users/signup 200 in 103ms (compile: 14ms, render: 89ms)
+ GET /users/signin 200 in 1955ms (compile: 1865ms, render: 90ms)
+ GET / 200 in 1020ms (compile: 836ms, render: 184ms)
+ GET / 200 in 54ms (compile: 11ms, render: 43ms)
+ GET / 200 in 53ms (compile: 8ms, render: 44ms)
+ GET / 200 in 73ms (compile: 10ms, render: 63ms)
+ ✓ Compiled in 320ms
+ GET /docs 200 in 656ms (compile: 513ms, render: 143ms)
+ ✓ Compiled in 300ms
+ ✓ Compiled in 316ms
+ ✓ Compiled in 476ms
+ ✓ Compiled in 183ms
+ ✓ Compiled in 345ms
+ ✓ Compiled in 337ms
+ ✓ Compiled in 360ms
+ GET / 200 in 2.3s (compile: 1955ms, render: 325ms)
+ ✓ Compiled in 305ms
+ GET / 200 in 440ms (compile: 332ms, render: 108ms)
+ ✓ Compiled in 253ms
+ GET /docs 200 in 101ms (compile: 15ms, render: 85ms)
+ GET / 200 in 781ms (compile: 648ms, render: 133ms)
+ GET /users/signup 200 in 142ms (compile: 19ms, render: 123ms)
+ GET /users/signin 200 in 116ms (compile: 15ms, render: 101ms)
+ GET / 200 in 112ms (compile: 17ms, render: 95ms)
+ ✓ Compiled in 799ms
+ ✓ Compiled in 1820ms
+ ⨯ ./apps/web/src/app/projects/page.tsx:524:25
+Parsing ecmascript source code failed
+[0m [90m 522 |[39m                        [33m<[39m[33m/[39m[33mbutton[39m[33m>[39m
+ [90m 523 |[39m                     [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+[31m[1m>[22m[39m[90m 524 |[39m                  [33m<[39m[33m/[39m[33mform[39m[33m>[39m
+ [90m     |[39m                         [31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 525 |[39m               [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 526 |[39m            [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m 527 |[39m         )}
+ [90m 528 |[39m     [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
 
-
+Expected '</', got 'jsx text (
+              )'
 
 Import traces:
   Client Component Browser:
+    ./apps/web/src/app/projects/page.tsx [Client Component Browser]
     ./apps/web/src/app/page.tsx [Client Component Browser]
     ./apps/web/src/app/page.tsx [Server Component]
 
   Client Component SSR:
+    ./apps/web/src/app/projects/page.tsx [Client Component SSR]
     ./apps/web/src/app/page.tsx [Client Component SSR]
     ./apps/web/src/app/page.tsx [Server Component]
 
-https://nextjs.org/docs/messages/module-not-found
 
+ ○ Compiling /_error ...
+ GET / 500 in 7.5s (compile: 6.6s, render: 835ms)
+ ⨯ ./apps/web/src/app/projects/page.tsx:524:25
+Parsing ecmascript source code failed
+[0m [90m 522 |[39m                        [33m<[39m[33m/[39m[33mbutton[39m[33m>[39m
+ [90m 523 |[39m                     [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+[31m[1m>[22m[39m[90m 524 |[39m                  [33m<[39m[33m/[39m[33mform[39m[33m>[39m
+ [90m     |[39m                         [31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 525 |[39m               [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 526 |[39m            [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m 527 |[39m         )}
+ [90m 528 |[39m     [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
 
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m'./components/ProjectsView'[39m[33m;[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 18 |[39m
- [90m 19 |[39m [90m// Language Options[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [[0m
-
-
+Expected '</', got 'jsx text (
+              )'
 
 Import traces:
   Client Component Browser:
+    ./apps/web/src/app/projects/page.tsx [Client Component Browser]
     ./apps/web/src/app/page.tsx [Client Component Browser]
     ./apps/web/src/app/page.tsx [Server Component]
 
   Client Component SSR:
+    ./apps/web/src/app/projects/page.tsx [Client Component SSR]
     ./apps/web/src/app/page.tsx [Client Component SSR]
     ./apps/web/src/app/page.tsx [Server Component]
 
-https://nextjs.org/docs/messages/module-not-found
 
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m'./components/ProjectsView'[39m[33m;[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 18 |[39m
- [90m 19 |[39m [90m// Language Options[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m'./components/ProjectsView'[39m[33m;[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 18 |[39m
- [90m 19 |[39m [90m// Language Options[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
- ✓ Compiled in 2.8s
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m'./components/ProjectsView'[39m[33m;[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 18 |[39m
- [90m 19 |[39m [90m// Language Options[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m'./components/ProjectsView'[39m[33m;[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 18 |[39m
- [90m 19 |[39m [90m// Language Options[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m'./components/ProjectsView'[39m[33m;[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 18 |[39m
- [90m 19 |[39m [90m// Language Options[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m'./components/ProjectsView'[39m[33m;[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 18 |[39m
- [90m 19 |[39m [90m// Language Options[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m'./components/ProjectsView'[39m[33m;[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 18 |[39m
- [90m 19 |[39m [90m// Language Options[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m'./components/ProjectsView'[39m[33m;[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 18 |[39m
- [90m 19 |[39m [90m// Language Options[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m'./components/ProjectsView'[39m[33m;[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 18 |[39m
- [90m 19 |[39m [90m// Language Options[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m'./components/ProjectsView'[39m[33m;[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 18 |[39m
- [90m 19 |[39m [90m// Language Options[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m"./projects/page[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 18 |[39m
- [90m    |[39m [31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 19 |[39m [90m// Language Options[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [
- [90m 21 |[39m   { id[33m:[39m [32m'javascript'[39m[33m,[39m name[33m:[39m [32m'JavaScript'[39m[33m,[39m ext[33m:[39m [32m'js'[39m }[33m,[39m
- [90m 22 |[39m   { id[33m:[39m [32m'typescript'[39m[33m,[39m name[33m:[39m [32m'TypeScript'[39m[33m,[39m ext[33m:[39m [32m'ts'[39m }[33m,[39m[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m"./projects/page[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 18 |[39m
- [90m    |[39m [31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 19 |[39m [90m// Language Options[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [
- [90m 21 |[39m   { id[33m:[39m [32m'javascript'[39m[33m,[39m name[33m:[39m [32m'JavaScript'[39m[33m,[39m ext[33m:[39m [32m'js'[39m }[33m,[39m
- [90m 22 |[39m   { id[33m:[39m [32m'typescript'[39m[33m,[39m name[33m:[39m [32m'TypeScript'[39m[33m,[39m ext[33m:[39m [32m'ts'[39m }[33m,[39m[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m"./projects/page[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 18 |[39m
- [90m    |[39m [31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 19 |[39m [90m// Language Options[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [
- [90m 21 |[39m   { id[33m:[39m [32m'javascript'[39m[33m,[39m name[33m:[39m [32m'JavaScript'[39m[33m,[39m ext[33m:[39m [32m'js'[39m }[33m,[39m
- [90m 22 |[39m   { id[33m:[39m [32m'typescript'[39m[33m,[39m name[33m:[39m [32m'TypeScript'[39m[33m,[39m ext[33m:[39m [32m'ts'[39m }[33m,[39m[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m"./projects/page[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 18 |[39m
- [90m    |[39m [31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 19 |[39m [90m// Language Options[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [
- [90m 21 |[39m   { id[33m:[39m [32m'javascript'[39m[33m,[39m name[33m:[39m [32m'JavaScript'[39m[33m,[39m ext[33m:[39m [32m'js'[39m }[33m,[39m
- [90m 22 |[39m   { id[33m:[39m [32m'typescript'[39m[33m,[39m name[33m:[39m [32m'TypeScript'[39m[33m,[39m ext[33m:[39m [32m'ts'[39m }[33m,[39m[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m"./projects/page[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 18 |[39m
- [90m    |[39m [31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 19 |[39m [90m// Language Options[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [
- [90m 21 |[39m   { id[33m:[39m [32m'javascript'[39m[33m,[39m name[33m:[39m [32m'JavaScript'[39m[33m,[39m ext[33m:[39m [32m'js'[39m }[33m,[39m
- [90m 22 |[39m   { id[33m:[39m [32m'typescript'[39m[33m,[39m name[33m:[39m [32m'TypeScript'[39m[33m,[39m ext[33m:[39m [32m'ts'[39m }[33m,[39m[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m"./projects/page[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 18 |[39m
- [90m    |[39m [31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 19 |[39m [90m// Language Options[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [
- ✓ Compiled in 333ms
- [90m 21 |[39m   { id[33m:[39m [32m'javascript'[39m[33m,[39m name[33m:[39m [32m'JavaScript'[39m[33m,[39m ext[33m:[39m [32m'js'[39m }[33m,[39m
- [90m 22 |[39m   { id[33m:[39m [32m'typescript'[39m[33m,[39m name[33m:[39m [32m'TypeScript'[39m[33m,[39m ext[33m:[39m [32m'ts'[39m }[33m,[39m[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m"./projects/page[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 18 |[39m
- [90m    |[39m [31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 19 |[39m [90m// Language Options[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [
- [90m 21 |[39m   { id[33m:[39m [32m'javascript'[39m[33m,[39m name[33m:[39m [32m'JavaScript'[39m[33m,[39m ext[33m:[39m [32m'js'[39m }[33m,[39m
- [90m 22 |[39m   { id[33m:[39m [32m'typescript'[39m[33m,[39m name[33m:[39m [32m'TypeScript'[39m[33m,[39m ext[33m:[39m [32m'ts'[39m }[33m,[39m[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m"./projects/page[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 18 |[39m
- [90m    |[39m [31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 19 |[39m [90m// Language Options[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [
- [90m 21 |[39m   { id[33m:[39m [32m'javascript'[39m[33m,[39m name[33m:[39m [32m'JavaScript'[39m[33m,[39m ext[33m:[39m [32m'js'[39m }[33m,[39m
- [90m 22 |[39m   { id[33m:[39m [32m'typescript'[39m[33m,[39m name[33m:[39m [32m'TypeScript'[39m[33m,[39m ext[33m:[39m [32m'ts'[39m }[33m,[39m[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m"./projects/page[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 18 |[39m
- [90m    |[39m [31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 19 |[39m [90m// Language Options[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [
- [90m 21 |[39m   { id[33m:[39m [32m'javascript'[39m[33m,[39m name[33m:[39m [32m'JavaScript'[39m[33m,[39m ext[33m:[39m [32m'js'[39m }[33m,[39m
- [90m 22 |[39m   { id[33m:[39m [32m'typescript'[39m[33m,[39m name[33m:[39m [32m'TypeScript'[39m[33m,[39m ext[33m:[39m [32m'ts'[39m }[33m,[39m[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m"./projects/page[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 18 |[39m
- [90m    |[39m [31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 19 |[39m [90m// Language Options[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [
- [90m 21 |[39m   { id[33m:[39m [32m'javascript'[39m[33m,[39m name[33m:[39m [32m'JavaScript'[39m[33m,[39m ext[33m:[39m [32m'js'[39m }[33m,[39m
- [90m 22 |[39m   { id[33m:[39m [32m'typescript'[39m[33m,[39m name[33m:[39m [32m'TypeScript'[39m[33m,[39m ext[33m:[39m [32m'ts'[39m }[33m,[39m[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m"./projects/page[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 18 |[39m
- [90m    |[39m [31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 19 |[39m [90m// Language Options[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [
- [90m 21 |[39m   { id[33m:[39m [32m'javascript'[39m[33m,[39m name[33m:[39m [32m'JavaScript'[39m[33m,[39m ext[33m:[39m [32m'js'[39m }[33m,[39m
- [90m 22 |[39m   { id[33m:[39m [32m'typescript'[39m[33m,[39m name[33m:[39m [32m'TypeScript'[39m[33m,[39m ext[33m:[39m [32m'ts'[39m }[33m,[39m[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ⨯ ./apps/web/src/app/page.tsx:17:1
-Module not found: Can't resolve './components/ProjectsView'
-[0m [90m 15 |[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
- [90m 16 |[39m [90m// Import the component[39m
-[31m[1m>[22m[39m[90m 17 |[39m [36mimport[39m [33mProjectsView[39m [36mfrom[39m [32m"./projects/page[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 18 |[39m
- [90m    |[39m [31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 19 |[39m [90m// Language Options[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 20 |[39m [36mconst[39m [33mLANGUAGES[39m [33m=[39m [
- [90m 21 |[39m   { id[33m:[39m [32m'javascript'[39m[33m,[39m name[33m:[39m [32m'JavaScript'[39m[33m,[39m ext[33m:[39m [32m'js'[39m }[33m,[39m
- [90m 22 |[39m   { id[33m:[39m [32m'typescript'[39m[33m,[39m name[33m:[39m [32m'TypeScript'[39m[33m,[39m ext[33m:[39m [32m'ts'[39m }[33m,[39m[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- ✓ Compiled in 451ms
- GET /?projectId=1005ed22-6153-4bc7-afc6-91ade9e9c9e3 200 in 1514ms (compile: 1285ms, render: 230ms)
- ✓ Compiled in 1595ms
- GET /?projectId=1005ed22-6153-4bc7-afc6-91ade9e9c9e3 200 in 1502ms (compile: 786ms, render: 716ms)
- GET /users/signin 200 in 85ms (compile: 21ms, render: 64ms)
- GET / 200 in 156ms (compile: 24ms, render: 132ms)
- GET / 200 in 455ms (compile: 22ms, render: 434ms)
- GET / 200 in 81ms (compile: 11ms, render: 70ms)
- GET /?projectId=94e8540e-3b59-48a5-9f34-25820581c101 200 in 167ms (compile: 12ms, render: 155ms)
- GET /explanation/cmjoaq0za0006v0984etrb1dg 200 in 254ms (compile: 166ms, render: 88ms)
- GET / 200 in 111ms (compile: 30ms, render: 82ms)
- GET /explanation/cmjoaq0za0006v0984etrb1dg 200 in 229ms (compile: 64ms, render: 164ms)
+ GET / 500 in 406ms (compile: 321ms, render: 85ms)
+ GET /users/signin 200 in 542ms (compile: 35ms, render: 507ms)
+ ✓ Compiled in 388ms
+ GET /users/signin 200 in 131ms (compile: 15ms, render: 115ms)
+ GET / 200 in 1128ms (compile: 519ms, render: 609ms)
+ GET / 200 in 458ms (compile: 25ms, render: 433ms)
+ GET /users/signup 200 in 115ms (compile: 34ms, render: 82ms)
