@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { 
   Folder, 
@@ -8,9 +9,14 @@ import {
   Pencil, 
   Trash2, 
   Loader2, 
-  X 
+  X,
+  FileCode,
+  ArrowRight,
+  ArrowLeft,
+  Share2,
+  Copy,
+  Check
 } from 'lucide-react';
-import Sidebar from '../component/sidebar';
 
 interface Project {
   id: number;
@@ -20,28 +26,42 @@ interface Project {
   createdAt: string;
 }
 
+interface Explanation {
+  id: string;
+  fileName: string;
+  language: string;
+  createdAt: string;
+  projectId?: number;
+  isPublic?: boolean;
+  publicShareId?: string;
+}
+
 export default function ProjectsView() {
+  const router = useRouter();
+  
+  // Projects List State
   const [projects, setProjects] = useState<Project[]>([]);
   const [loadingProjects, setLoadingProjects] = useState(false);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
-  
-  // Project Form State
   const [projectName, setProjectName] = useState('');
   const [projectDesc, setProjectDesc] = useState('');
 
-  // User State for Sidebar
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  // Selected Project State (History View)
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [projectExplanations, setProjectExplanations] = useState<Explanation[]>([]);
+  const [loadingExplanations, setLoadingExplanations] = useState(false);
+
+  // Share Modal State
+  const [shareModalData, setShareModalData] = useState<{link: string, id: string} | null>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    // Load user for sidebar display
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
     fetchProjects();
   }, []);
+
+  // --- Data Fetching ---
 
   const fetchProjects = async () => {
     setLoadingProjects(true);
@@ -50,9 +70,7 @@ export default function ProjectsView() {
       if (!token) return;
       
       const res = await axios.get('http://localhost:5000/projects/get', {
-   
-
-   headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` }
       });
       setProjects(res.data.projects || []);
     } catch (error) {
@@ -62,6 +80,27 @@ export default function ProjectsView() {
     }
   };
 
+  const fetchProjectExplanations = async (projectId: number) => {
+    setLoadingExplanations(true);
+    try {
+      const token = localStorage.getItem('accessToken');
+      const res = await axios.get('http://localhost:5000/explainations', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      const allExplanations = res.data.explanations || res.data || [];
+      const filtered = allExplanations.filter((ex: any) => String(ex.projectId) === String(projectId));
+      
+      setProjectExplanations(filtered);
+    } catch (error) {
+      console.error("Failed to fetch project analyses", error);
+    } finally {
+      setLoadingExplanations(false);
+    }
+  };
+
+  // --- Project Actions ---
+
   const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -70,8 +109,7 @@ export default function ProjectsView() {
         name: projectName,
         description: projectDesc
       }, {
-        
-  headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` }
       });
       
       setProjects(prev => [res.data.project, ...prev]);
@@ -91,7 +129,7 @@ export default function ProjectsView() {
         name: projectName,
         description: projectDesc
       }, {
-    headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` }
       });
 
       setProjects(prev => prev.map(p => p.id === currentProject.id ? res.data.project : p));
@@ -103,15 +141,68 @@ export default function ProjectsView() {
 
   const handleDeleteProject = async (id: number) => {
     if (!confirm("Are you sure you want to delete this project?")) return;
-    
     try {
       const token = localStorage.getItem('accessToken');
       await axios.delete(`http://localhost:5000/projects/delete/${id}`, {
-      headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` }
       });
       setProjects(prev => prev.filter(p => p.id !== id));
+      if (selectedProject?.id === id) handleBackToProjects();
     } catch (error: any) {
       alert("Failed to delete project");
+    }
+  };
+
+  const handleShare = async (e: React.MouseEvent, explanationId: string) => {
+    e.stopPropagation();
+    try {
+      const token = localStorage.getItem('accessToken');
+      const res = await axios.patch(`http://localhost:5000/explainations/${explanationId}/share`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      const shareId = res.data.shareId || res.data.explanation?.publicShareId || res.data.publicShareId;
+      if (shareId) {
+        const shareUrl = `${window.location.origin}/share/${shareId}`;
+        setShareModalData({ link: shareUrl, id: explanationId });
+        setProjectExplanations(prev => prev.map(ex => 
+          ex.id === explanationId ? { ...ex, isPublic: true } : ex
+        ));
+      } else {
+        alert("Could not generate share link.");
+      }
+    } catch (error: any) {
+      console.error("Share failed", error);
+      alert("Failed to share explanation");
+    }
+  };
+
+  const copyToClipboard = () => {
+    if (shareModalData) {
+      navigator.clipboard.writeText(shareModalData.link);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  // --- Handlers ---
+
+  const handleProjectClick = (project: Project) => {
+    setSelectedProject(project);
+    fetchProjectExplanations(project.id);
+  };
+
+  const handleBackToProjects = () => {
+    setSelectedProject(null);
+    setProjectExplanations([]);
+  };
+
+  // Redirect to Home with context
+  const handleAnalyzeNew = () => {
+    if (selectedProject) {
+      // Use window.location to force full redirect to Home page with param
+      // Note: router.push('/?projectId=...') might work if Home handles param updates well
+      window.location.href = `/?projectId=${selectedProject.id}`;
     }
   };
 
@@ -122,7 +213,8 @@ export default function ProjectsView() {
     setShowProjectModal(true);
   };
 
-  const openEditModal = (project: Project) => {
+  const openEditModal = (project: Project, e: React.MouseEvent) => {
+    e.stopPropagation(); 
     setIsEditing(true);
     setCurrentProject(project);
     setProjectName(project.name);
@@ -135,144 +227,263 @@ export default function ProjectsView() {
     setCurrentProject(null);
   };
 
-  return (
-    <div className="flex h-screen bg-[#000000] font-sans text-white overflow-hidden selection:bg-white selection:text-black">
-       
-       {/* Reusable Sidebar - Always visible */}
-       <Sidebar activePage="projects" user={user} />
+  // --- RENDER ---
 
-       {/* MAIN CONTENT AREA */}
-       <main className="flex-1 flex flex-col relative overflow-hidden bg-[#000000]">
-          
-          {/* Background Grid Pattern */}
-          <div 
-            className="absolute inset-0 z-0 pointer-events-none opacity-20" 
-            style={{
-              backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)',
-              backgroundSize: '40px 40px'
-            }}
-          />
-
-          {/* Scrollable Container */}
-          <div className="flex-1 flex flex-col p-6 z-10 overflow-y-auto">
-            <div className="w-full max-w-6xl mx-auto h-full flex flex-col animate-in fade-in zoom-in duration-300">
-                <div className="flex items-center justify-between mb-8">
-                  <div>
-                    <h1 className="text-2xl font-semibold tracking-tight text-white">Projects</h1>
-                    <p className="text-[#888] text-sm font-mono mt-1">Manage your code analysis projects.</p>
-                  </div>
-                  <button 
-                    onClick={openCreateModal}
-                    className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-md text-sm font-medium hover:bg-gray-200 transition-colors"
-                  >
-                    <Plus size={16} /> New Project
-                  </button>
-                </div>
-
-                {loadingProjects ? (
-                  <div className="flex-1 flex items-center justify-center">
-                      <Loader2 className="animate-spin text-[#333]" size={32} />
-                  </div>
-                ) : projects.length === 0 ? (
-                  <div className="flex-1 flex flex-col items-center justify-center text-center border-2 border-dashed border-[#333] rounded-lg bg-[#111]/50 p-10">
-                      <Folder className="text-[#333] w-16 h-16 mb-4" />
-                      <h3 className="text-white font-medium">No projects found</h3>
-                      <p className="text-[#888] text-sm mt-1 mb-6">Create your first project to organize your snippets.</p>
-                      <button 
-                        onClick={openCreateModal}
-                        className="px-4 py-2 bg-[#333] text-white rounded hover:bg-[#444] text-sm transition-colors"
-                      >
-                        Create Project
-                      </button>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-10">
-                      {projects.map((project) => (
-                        <div key={project.id} className="bg-[#111] border border-[#333] rounded-lg p-5 group hover:border-[#666] transition-colors relative">
-                            <div className="flex justify-between items-start mb-3">
-                              <div className="p-2 bg-black rounded border border-[#333]">
-                                  <Folder size={20} className="text-indigo-400" />
-                              </div>
-                              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                  <button 
-                                    onClick={() => openEditModal(project)}
-                                    className="p-1.5 hover:bg-[#333] rounded text-[#888] hover:text-white"
-                                  >
-                                    <Pencil size={14} />
-                                  </button>
-                                  <button 
-                                    onClick={() => handleDeleteProject(project.id)}
-                                    className="p-1.5 hover:bg-[#333] rounded text-[#888] hover:text-red-400"
-                                  >
-                                    <Trash2 size={14} />
-                                  </button>
-                              </div>
-                            </div>
-                            <h3 className="text-white font-medium mb-1 truncate">{project.name}</h3>
-                            <p className="text-[#888] text-xs line-clamp-2 h-8">{project.description}</p>
-                            <div className="mt-4 pt-4 border-t border-[#333] flex items-center justify-between">
-                              <span className="text-[10px] font-mono text-[#666]">{new Date(project.createdAt).toLocaleDateString()}</span>
-                              <button className="text-[10px] font-mono text-indigo-400 hover:underline">OPEN_DETAILS &rarr;</button>
-                            </div>
-                        </div>
-                      ))}
-                  </div>
-                )}
+  // 1. SELECTED PROJECT VIEW (History Only)
+  if (selectedProject) {
+    return (
+      <div className="w-full max-w-5xl mx-auto h-full flex flex-col animate-in fade-in zoom-in duration-300 pb-10">
+        
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={handleBackToProjects}
+              className="p-2 rounded-full hover:bg-[#111] border border-transparent hover:border-[#333] transition-all text-[#888] hover:text-white"
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <div>
+              <div className="flex items-center gap-2">
+                <Folder size={18} className="text-indigo-400" />
+                <h1 className="text-xl font-semibold tracking-tight text-white">{selectedProject.name}</h1>
+              </div>
+              <p className="text-[#888] text-xs font-mono mt-1 line-clamp-1">{selectedProject.description}</p>
             </div>
           </div>
 
-          {/* --- PROJECT MODAL --- */}
-          {showProjectModal && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-                <div className="bg-[#111] border border-[#333] rounded-lg w-full max-w-md shadow-2xl animate-in zoom-in-95 duration-200">
-                    <div className="flex items-center justify-between p-4 border-b border-[#333]">
-                      <h3 className="text-white font-medium">{isEditing ? 'Edit Project' : 'New Project'}</h3>
-                      <button onClick={closeModal} className="text-[#888] hover:text-white"><X size={18} /></button>
+          <button 
+            onClick={handleAnalyzeNew}
+            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-500/20"
+          >
+            <Plus size={16} /> New Analysis
+          </button>
+        </div>
+
+        {/* History List */}
+        <div className="w-full">
+             <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-semibold text-white">Project Analysis History</h2>
+                <span className="text-xs text-[#666] font-mono">{projectExplanations.length} Reports</span>
+             </div>
+
+             {loadingExplanations ? (
+               <div className="flex justify-center py-10"><Loader2 className="animate-spin text-[#333]" /></div>
+             ) : projectExplanations.length === 0 ? (
+               <div className="text-center py-16 border border-dashed border-[#333] rounded-lg bg-[#111]/30">
+                  <div className="bg-[#111] p-3 rounded-full border border-[#333] inline-block mb-3">
+                    <FileCode className="text-[#444] w-6 h-6" />
+                  </div>
+                  <p className="text-[#888] text-sm font-medium">No analysis reports yet.</p>
+                  <p className="text-[#555] text-xs mt-1 mb-4">Upload code to get started with this project.</p>
+                  <button 
+                    onClick={handleAnalyzeNew}
+                    className="text-xs font-mono text-indigo-400 hover:text-indigo-300 hover:underline"
+                  >
+                    START_ANALYSIS &rarr;
+                  </button>
+               </div>
+             ) : (
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {projectExplanations.map((item) => (
+                    <div 
+                      key={item.id} 
+                      className="group flex flex-col bg-[#111] border border-[#333] rounded-lg p-4 hover:border-[#666] transition-all"
+                    >
+                        <div 
+                          className="flex items-start gap-4 cursor-pointer mb-3"
+                          onClick={() => router.push(`/explanation/${item.id}`)}
+                        >
+                          <div className="p-2 bg-black rounded border border-[#333] text-indigo-400">
+                              <FileCode size={20} />
+                          </div>
+                          <div>
+                              <h4 className="text-sm font-medium text-white mb-0.5">{item.fileName || 'Untitled'}</h4>
+                              <p className="text-[10px] text-[#666] font-mono">
+                                {new Date(item.createdAt).toLocaleDateString()} • {item.language}
+                              </p>
+                          </div>
+                        </div>
+
+                        <div className="mt-auto pt-3 border-t border-[#333] flex items-center justify-between">
+                           <button 
+                             onClick={() => router.push(`/explanation/${item.id}`)}
+                             className="text-xs font-mono text-white hover:underline flex items-center gap-1"
+                           >
+                             VIEW REPORT <ArrowRight size={12} />
+                           </button>
+                           
+                           <button 
+                             onClick={(e) => handleShare(e, item.id)}
+                             className="p-1.5 text-[#666] hover:text-white hover:bg-[#222] rounded transition-colors flex items-center gap-1"
+                             title="Share"
+                           >
+                             <Share2 size={14} />
+                             {item.isPublic && <span className="text-[10px] text-indigo-400">Public</span>}
+                           </button>
+                        </div>
                     </div>
-                    <form onSubmit={isEditing ? handleEditProject : handleCreateProject} className="p-6 space-y-4">
-                      <div className="space-y-1">
-                          <label className="text-xs font-mono text-[#888] uppercase">Project Name</label>
-                          <input 
-                            type="text" 
-                            required
-                            minLength={3}
-                            value={projectName}
-                            onChange={e => setProjectName(e.target.value)}
-                            placeholder="My Awesome Project"
-                            className="w-full bg-black border border-[#333] rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-white transition-colors"
-                          />
-                      </div>
-                      <div className="space-y-1">
-                          <label className="text-xs font-mono text-[#888] uppercase">Description</label>
-                          <textarea 
-                            required
-                            value={projectDesc}
-                            onChange={e => setProjectDesc(e.target.value)}
-                            placeholder="What is this project about?"
-                            rows={3}
-                            className="w-full bg-black border border-[#333] rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-white transition-colors resize-none"
-                          />
-                      </div>
-                      <div className="pt-4 flex justify-end gap-3">
-                          <button 
-                            type="button" 
-                            onClick={closeModal}
-                            className="px-4 py-2 text-sm text-[#888] hover:text-white"
-                          >
-                            Cancel
-                          </button>
-                          <button 
-                            type="submit"
-                            className="px-4 py-2 bg-white text-black text-sm font-medium rounded hover:bg-gray-200"
-                          >
-                            {isEditing ? 'Save Changes' : 'Create Project'}
-                          </button>
-                      </div>
-                    </form>
+                  ))}
+               </div>
+             )}
+        </div>
+
+        {/* --- SHARE MODAL --- */}
+        {shareModalData && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+             <div className="bg-[#111] border border-[#333] rounded-lg w-full max-w-sm p-6 shadow-2xl animate-in zoom-in-95">
+                <div className="flex justify-between items-center mb-4">
+                   <h3 className="text-white font-medium">Share Analysis</h3>
+                   <button onClick={() => setShareModalData(null)} className="text-[#666] hover:text-white"><X size={18} /></button>
                 </div>
+                <p className="text-xs text-[#888] mb-4">Anyone with this link can view this analysis report.</p>
+                
+                <div className="flex gap-2">
+                   <input 
+                     type="text" 
+                     readOnly 
+                     value={shareModalData.link}
+                     className="flex-1 bg-black border border-[#333] rounded px-3 text-xs text-[#ccc] focus:outline-none"
+                   />
+                   <button 
+                     onClick={copyToClipboard}
+                     className="p-2 bg-indigo-600 text-white rounded hover:bg-indigo-500 transition-colors"
+                   >
+                     {copied ? <Check size={16} /> : <Copy size={16} />}
+                   </button>
+                </div>
+             </div>
+          </div>
+        )}
+
+      </div>
+    );
+  }
+
+  // 2. PROJECT LIST VIEW (Default)
+  return (
+    <div className="w-full max-w-6xl mx-auto h-full flex flex-col animate-in fade-in zoom-in duration-300 pb-10">
+       <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight text-white">Projects</h1>
+            <p className="text-[#888] text-sm font-mono mt-1">Manage your code analysis projects.</p>
+          </div>
+          <button 
+            onClick={openCreateModal}
+            className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-md text-sm font-medium hover:bg-gray-200 transition-colors"
+          >
+            <Plus size={16} /> New Project
+          </button>
+       </div>
+
+       {loadingProjects ? (
+         <div className="flex-1 flex items-center justify-center">
+            <Loader2 className="animate-spin text-[#333]" size={32} />
+         </div>
+       ) : projects.length === 0 ? (
+         <div className="flex-1 flex flex-col items-center justify-center text-center border-2 border-dashed border-[#333] rounded-lg bg-[#111]/50 p-10">
+            <Folder className="text-[#333] w-16 h-16 mb-4" />
+            <h3 className="text-white font-medium">No projects found</h3>
+            <p className="text-[#888] text-sm mt-1 mb-6">Create your first project to organize your snippets.</p>
+            <button 
+              onClick={openCreateModal}
+              className="px-4 py-2 bg-[#333] text-white rounded hover:bg-[#444] text-sm transition-colors"
+            >
+              Create Project
+            </button>
+         </div>
+       ) : (
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-10">
+            {projects.map((project) => (
+               <div 
+                 key={project.id} 
+                 onClick={() => handleProjectClick(project)}
+                 className="bg-[#111] border border-[#333] rounded-lg p-5 group hover:border-[#666] transition-colors relative cursor-pointer"
+               >
+                  <div className="flex justify-between items-start mb-3">
+                     <div className="p-2 bg-black rounded border border-[#333]">
+                        <Folder size={20} className="text-indigo-400" />
+                     </div>
+                     <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button 
+                          onClick={(e) => openEditModal(project, e)}
+                          className="p-1.5 hover:bg-[#333] rounded text-[#888] hover:text-white"
+                        >
+                          <Pencil size={14} />
+                        </button>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteProject(project.id);
+                          }}
+                          className="p-1.5 hover:bg-[#333] rounded text-[#888] hover:text-red-400"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                     </div>
+                  </div>
+                  <h3 className="text-white font-medium mb-1 truncate">{project.name}</h3>
+                  <p className="text-[#888] text-xs line-clamp-2 h-8">{project.description}</p>
+                  <div className="mt-4 pt-4 border-t border-[#333] flex items-center justify-between">
+                     <span className="text-[10px] font-mono text-[#666]">{new Date(project.createdAt).toLocaleDateString()}</span>
+                     <button className="text-[10px] font-mono text-indigo-400 hover:underline">OPEN_PROJECT &rarr;</button>
+                  </div>
+               </div>
+            ))}
+         </div>
+       )}
+
+       {/* --- PROJECT MODAL --- */}
+       {showProjectModal && (
+           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+              <div className="bg-[#111] border border-[#333] rounded-lg w-full max-w-md shadow-2xl animate-in zoom-in-95 duration-200">
+                 <div className="flex items-center justify-between p-4 border-b border-[#333]">
+                    <h3 className="text-white font-medium">{isEditing ? 'Edit Project' : 'New Project'}</h3>
+                    <button onClick={closeModal} className="text-[#888] hover:text-white"><X size={18} /></button>
+                 </div>
+                 <form onSubmit={isEditing ? handleEditProject : handleCreateProject} className="p-6 space-y-4">
+                    <div className="space-y-1">
+                       <label className="text-xs font-mono text-[#888] uppercase">Project Name</label>
+                       <input 
+                         type="text" 
+                         required
+                         minLength={3}
+                         value={projectName}
+                         onChange={e => setProjectName(e.target.value)}
+                         placeholder="My Awesome Project"
+                         className="w-full bg-black border border-[#333] rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-white transition-colors"
+                       />
+                    </div>
+                    <div className="space-y-1">
+                       <label className="text-xs font-mono text-[#888] uppercase">Description</label>
+                       <textarea 
+                         required
+                         value={projectDesc}
+                         onChange={e => setProjectDesc(e.target.value)}
+                         placeholder="What is this project about?"
+                         rows={3}
+                         className="w-full bg-black border border-[#333] rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-white transition-colors resize-none"
+                       />
+                    </div>
+                    <div className="pt-4 flex justify-end gap-3">
+                       <button 
+                         type="button" 
+                         onClick={closeModal}
+                         className="px-4 py-2 text-sm text-[#888] hover:text-white"
+                       >
+                         Cancel
+                       </button>
+                       <button 
+                         type="submit"
+                         className="px-4 py-2 bg-white text-black text-sm font-medium rounded hover:bg-gray-200"
+                       >
+                         {isEditing ? 'Save Changes' : 'Create Project'}
+                       </button>
+                    </div>
+                 </form>
               </div>
-          )}
-       </main>
+           </div>
+        )}
     </div>
   );
 }

@@ -101,7 +101,7 @@ function SignInForm() {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <label className="text-sm font-medium text-gray-300">Password</label>
-                <Link href="/forgot-password" className="text-xs text-gray-500 hover:text-white transition-colors">
+                <Link href="/users/forgotpassword" className="text-xs text-gray-500 hover:text-white transition-colors">
                   Forgot password?
                 </Link>
               </div>
