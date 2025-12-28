@@ -400,16 +400,18 @@ export default function ProjectsView() {
   // 2. PROJECT LIST VIEW (Default)
   return (
     <div className="w-full max-w-6xl mx-auto h-full flex flex-col animate-in fade-in zoom-in duration-300 pb-10">
-       <div className="flex items-center justify-between mb-8">
+       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-white">Projects</h1>
             <p className="text-[#888] text-sm font-mono mt-1">Manage your code analysis projects.</p>
           </div>
           <button 
             onClick={openCreateModal}
-            className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-md text-sm font-medium hover:bg-gray-200 transition-colors"
+            className="flex items-center gap-2 px-4 sm:px-5 py-2 bg-white text-black rounded-md text-sm font-medium hover:bg-gray-200 transition-colors w-full sm:w-auto min-w-[120px] justify-center whitespace-nowrap"
           >
-            <Plus size={16} /> New Project
+            <Plus size={16} />
+            <span className="hidden sm:inline">New Project</span>
+            <span className="sm:hidden">New</span>
           </button>
        </div>
 
@@ -424,9 +426,10 @@ export default function ProjectsView() {
             <p className="text-[#888] text-sm mt-1 mb-6">Create your first project to organize your snippets.</p>
             <button 
               onClick={openCreateModal}
-              className="px-4 py-2 bg-[#333] text-white rounded hover:bg-[#444] text-sm transition-colors"
+              className="w-full sm:w-auto px-4 py-2 bg-[#333] text-white rounded hover:bg-[#444] text-sm transition-colors justify-center whitespace-nowrap"
             >
-              Create Project
+              <span className="hidden sm:inline">Create Project</span>
+              <span className="sm:hidden">Create</span>
             </button>
          </div>
        ) : (
@@ -495,34 +498,46 @@ export default function ProjectsView() {
                     <button onClick={closeModal} className="text-[#888] hover:text-white"><X size={18} /></button>
                  </div>
                  <form onSubmit={isEditing ? handleEditProject : handleCreateProject} className="p-6 space-y-4">
-                    <div className="space-y-1">
-                    <div className="space-y-1">
-                       <label className="text-xs font-mono text-[#888] uppercase">Description</label>
-                       <textarea 
-                         required
-                         value={projectDesc}
-                         onChange={e => setProjectDesc(e.target.value)}
-                         placeholder="What is this project about?"
-                         rows={3}
-                         className="w-full bg-black border border-[#333] rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-white transition-colors resize-none"
-                       />
+                    <div className="space-y-2">
+                      <div className="space-y-1">
+                        <label className="text-xs font-mono text-[#888] uppercase">Name</label>
+                        <input
+                          required
+                          value={projectName}
+                          onChange={e => setProjectName(e.target.value)}
+                          placeholder="Project name"
+                          className="w-full bg-black border border-[#333] rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-white transition-colors"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-mono text-[#888] uppercase">Description</label>
+                        <textarea 
+                          required
+                          value={projectDesc}
+                          onChange={e => setProjectDesc(e.target.value)}
+                          placeholder="What is this project about?"
+                          rows={3}
+                          className="w-full bg-black border border-[#333] rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-white transition-colors resize-none"
+                        />
+                      </div>
+
+                      <div className="pt-4 flex flex-col sm:flex-row justify-end gap-3">
+                        <button 
+                          type="button" 
+                          onClick={closeModal}
+                          className="w-full sm:w-auto px-4 py-2 text-sm text-[#888] hover:text-white text-center"
+                        >
+                          Cancel
+                        </button>
+                        <button 
+                          type="submit"
+                          className="w-full sm:w-auto px-4 py-2 bg-white text-black text-sm font-medium rounded hover:bg-gray-200 text-center"
+                        >
+                          {isEditing ? 'Save Changes' : 'Create Project'}
+                        </button>
+                      </div>
                     </div>
-                    <div className="pt-4 flex justify-end gap-3">
-                       <button 
-                         type="button" 
-                         onClick={closeModal}
-                         className="px-4 py-2 text-sm text-[#888] hover:text-white"
-                       >
-                         Cancel
-                       </button>
-                       <button 
-                         type="submit"
-                         className="px-4 py-2 bg-white text-black text-sm font-medium rounded hover:bg-gray-200"
-                       >
-                         {isEditing ? 'Save Changes' : 'Create Project'}
-                       </button>
-                    </div>
-                 </div>
                  </form>
               </div>
            </div>
