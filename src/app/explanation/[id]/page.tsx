@@ -343,7 +343,7 @@ export default function ExplanationResult() {
               </h2>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-black border border-[#333333] mb-8">
                 <span className="text-[10px] uppercase font-mono text-[#888888] tracking-widest">ID</span>
-                <span className="text-xs font-mono text-white">#{params.id.toString().slice(-6)}</span>
+                <span className="text-xs font-mono text-white">#{params.id ? params.id.toString().slice(-6) : '------'}</span>
               </div>
               <div className="w-full mb-3">
                 <div className="flex justify-between items-end mb-2 px-1">

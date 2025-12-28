@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
 import { API_BASE_URL } from '../../utils/api';
-import Editor, { Loader } from '@monaco-editor/react';
+import Editor from '@monaco-editor/react';
 import { 
   Bot, 
   FileCode, 

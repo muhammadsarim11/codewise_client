@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { API_BASE_URL } from './utils/api';
 import Editor from '@monaco-editor/react';
@@ -37,7 +37,7 @@ const LANGUAGES = [
 
 export default function Home() {
   const router = useRouter();
-  const searchParams = useSearchParams(); 
+  
   
   // Auth & User State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -70,7 +70,7 @@ export default function Home() {
       setIsAuthenticated(true);
 
       // Check for Project Context in URL (Deep Linking)
-      const paramProjectId = searchParams.get('projectId');
+      const paramProjectId = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('projectId') : null;
       if (paramProjectId) {
         setLinkedProjectId(paramProjectId);
         setActivePage('dashboard'); 
@@ -79,7 +79,7 @@ export default function Home() {
       // User is visitor
       setIsAuthenticated(false);
     }
-  }, [router, searchParams]);
+  }, [router]);
 
   // --- Handlers ---
 
@@ -199,6 +199,7 @@ export default function Home() {
   if (!user) return null; // Safety check
 
   return (
+    <Suspense fallback={null}>
     <div className="min-h-screen bg-[#000000] font-sans text-white flex flex-col overflow-x-hidden selection:bg-white selection:text-black">
       
       {/* Background Grid Pattern */}
@@ -476,6 +477,7 @@ export default function Home() {
 
       </main>
     </div>
+    </Suspense>
   );
 }
 
