@@ -313,12 +313,7 @@ export default function LandingPage() {
               <p className="text-[#444] text-xs ml-4">© 2025 CodeWise. All rights reserved.</p>
             </div>
             
-            <div className="flex gap-6 text-sm text-[#666]">
-              <Link href="#" className="hover:text-white transition-colors">Privacy</Link>
-              <Link href="#" className="hover:text-white transition-colors">Terms</Link>
-              <Link href="#" className="hover:text-white transition-colors">Twitter</Link>
-              <Link href="#" className="hover:text-white transition-colors">GitHub</Link>
-            </div>
+            
           </div>
         </footer>
 

@@ -229,7 +229,7 @@ export default function PublicSharePage() {
       
       {/* Public Header */}
       <header className="flex-none border-b border-[#333333] bg-[#000000] z-20">
-        <div className="px-6 py-3 flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
                <div className="size-6 text-white">
@@ -283,10 +283,10 @@ export default function PublicSharePage() {
       </header>
 
       {/* Main Content - Split View */}
-      <main className="flex-1 flex overflow-hidden animate-in fade-in zoom-in duration-500">
+      <main className="flex-1 flex flex-col md:flex-row overflow-hidden animate-in fade-in zoom-in duration-500">
         
         {/* LEFT PANEL: CODE VIEWER */}
-        <div className="w-1/2 border-r border-[#333333] flex flex-col bg-[#050505] relative group">
+        <div className="w-full md:w-1/2 md:border-r border-[#333333] flex flex-col bg-[#050505] relative group min-h-[45vh] md:min-h-0">
            <div className="flex-none px-4 py-2 bg-[#050505] border-b border-[#252526] flex items-center justify-between">
               <span className="text-xs font-mono text-[#969696] uppercase tracking-wider flex items-center gap-2">
                 <Code2 size={12} /> Source Code
@@ -305,7 +305,7 @@ export default function PublicSharePage() {
         </div>
 
         {/* RIGHT PANEL: ANALYSIS REPORT */}
-        <div className="w-1/2 flex flex-col bg-[#050505]">
+        <div className="w-full md:w-1/2 flex flex-col bg-[#050505] border-t md:border-t-0 border-[#333333]">
            <div className="flex-none px-6 py-3 border-b border-[#333333] bg-[#050505]">
               <h2 className="text-sm font-medium text-white flex items-center gap-2">
                  <Bot size={16} className="text-indigo-400" /> 
@@ -313,7 +313,7 @@ export default function PublicSharePage() {
               </h2>
            </div>
            
-           <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 custom-scrollbar space-y-8 pb-20">
+           <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 custom-scrollbar space-y-8 pb-20">
               
               {/* 1. Overview */}
               <section>

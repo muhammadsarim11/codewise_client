@@ -262,7 +262,6 @@ export default function Home() {
             <nav className="flex flex-col p-4 space-y-4">
               <button onClick={() => navTo('dashboard')} className={`text-sm font-mono text-left px-2 ${activePage === 'dashboard' ? 'text-white' : 'text-[#888]'}`}>/dashboard</button>
               <button onClick={() => navTo('projects')} className={`text-sm font-mono text-left px-2 ${activePage === 'projects' ? 'text-white' : 'text-[#888]'}`}>/projects</button>
-              <button onClick={() => navTo('settings')} className={`text-sm font-mono text-left px-2 ${activePage === 'settings' ? 'text-white' : 'text-[#888]'}`}>/settings</button>
               <div className="h-[1px] bg-[#333] w-full my-2"></div>
               <button onClick={handleLogout} className="text-sm font-mono text-left text-red-400 px-2 flex items-center gap-2">
                 <LogOut size={14} /> Logout
