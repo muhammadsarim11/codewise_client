@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
+import { API_BASE_URL } from '../../utils/api';
 import Editor, { Loader } from '@monaco-editor/react';
 import { 
   Bot, 
@@ -58,7 +59,7 @@ export default function PublicSharePage() {
     const fetchPublicExplanation = async () => {
       try {
         // Public Endpoint: GET /share/:shareId (No Auth Header needed)
-        const response = await axios.get(`http://localhost:5000/share/${params.shareId}`);
+        const response = await axios.get(`${API_BASE_URL}/share/${params.shareId}`);
         
         if (response.data.success) {
           setData(response.data.data);

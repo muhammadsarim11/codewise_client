@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
+import { API_BASE_URL } from '../../utils/api';
 import Editor  from '@monaco-editor/react';
 import { 
   ArrowLeft, 
@@ -75,7 +76,7 @@ export default function ExplanationResult() {
         return;
       }
 
-      const response = await axios.get(`http://localhost:5000/explainations/${params.id}`, {
+      const response = await axios.get(`${API_BASE_URL}/explainations/${params.id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -224,7 +225,7 @@ export default function ExplanationResult() {
       }
 
       // Otherwise call backend to enable sharing/get ID
-      const response = await axios.patch(`http://localhost:5000/explainations/${data.id}/share`, {}, {
+      const response = await axios.patch(`${API_BASE_URL}/explainations/${data.id}/share`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

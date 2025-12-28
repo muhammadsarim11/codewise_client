@@ -5,106 +5,37 @@
 [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
    ▲ Next.js 16.0.1 (Turbopack)
    - Local:        http://localhost:3000
-   - Network:      http://192.168.1.10:3000
+   - Network:      http://192.168.1.5:3000
 
  ✓ Starting...
- ✓ Ready in 4.3s
+ ✓ Ready in 3.9s
  ○ Compiling / ...
- GET / 200 in 17.8s (compile: 16.4s, render: 1442ms)
- GET / 200 in 114ms (compile: 25ms, render: 88ms)
- GET / 200 in 81ms (compile: 12ms, render: 70ms)
- GET / 200 in 78ms (compile: 14ms, render: 64ms)
- GET /users/signup 200 in 2.9s (compile: 2.6s, render: 299ms)
- GET /docs 200 in 1943ms (compile: 1861ms, render: 82ms)
- GET /users/signup 200 in 72ms (compile: 9ms, render: 64ms)
- GET / 200 in 54ms (compile: 12ms, render: 42ms)
- ✓ Compiled in 557ms
- GET /users/signup 200 in 103ms (compile: 14ms, render: 89ms)
- GET /users/signin 200 in 1955ms (compile: 1865ms, render: 90ms)
- GET / 200 in 1020ms (compile: 836ms, render: 184ms)
- GET / 200 in 54ms (compile: 11ms, render: 43ms)
- GET / 200 in 53ms (compile: 8ms, render: 44ms)
- GET / 200 in 73ms (compile: 10ms, render: 63ms)
- ✓ Compiled in 320ms
- GET /docs 200 in 656ms (compile: 513ms, render: 143ms)
- ✓ Compiled in 300ms
- ✓ Compiled in 316ms
- ✓ Compiled in 476ms
- ✓ Compiled in 183ms
- ✓ Compiled in 345ms
- ✓ Compiled in 337ms
- ✓ Compiled in 360ms
- GET / 200 in 2.3s (compile: 1955ms, render: 325ms)
- ✓ Compiled in 305ms
- GET / 200 in 440ms (compile: 332ms, render: 108ms)
- ✓ Compiled in 253ms
- GET /docs 200 in 101ms (compile: 15ms, render: 85ms)
- GET / 200 in 781ms (compile: 648ms, render: 133ms)
- GET /users/signup 200 in 142ms (compile: 19ms, render: 123ms)
- GET /users/signin 200 in 116ms (compile: 15ms, render: 101ms)
- GET / 200 in 112ms (compile: 17ms, render: 95ms)
- ✓ Compiled in 799ms
- ✓ Compiled in 1820ms
- ⨯ ./apps/web/src/app/projects/page.tsx:524:25
-Parsing ecmascript source code failed
-[0m [90m 522 |[39m                        [33m<[39m[33m/[39m[33mbutton[39m[33m>[39m
- [90m 523 |[39m                     [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
-[31m[1m>[22m[39m[90m 524 |[39m                  [33m<[39m[33m/[39m[33mform[39m[33m>[39m
- [90m     |[39m                         [31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 525 |[39m               [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
- [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 526 |[39m            [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
- [90m 527 |[39m         )}
- [90m 528 |[39m     [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
-
-Expected '</', got 'jsx text (
-              )'
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/projects/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/projects/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-
- ○ Compiling /_error ...
- GET / 500 in 7.5s (compile: 6.6s, render: 835ms)
- ⨯ ./apps/web/src/app/projects/page.tsx:524:25
-Parsing ecmascript source code failed
-[0m [90m 522 |[39m                        [33m<[39m[33m/[39m[33mbutton[39m[33m>[39m
- [90m 523 |[39m                     [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
-[31m[1m>[22m[39m[90m 524 |[39m                  [33m<[39m[33m/[39m[33mform[39m[33m>[39m
- [90m     |[39m                         [31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 525 |[39m               [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
- [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 526 |[39m            [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
- [90m 527 |[39m         )}
- [90m 528 |[39m     [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
-
-Expected '</', got 'jsx text (
-              )'
-
-Import traces:
-  Client Component Browser:
-    ./apps/web/src/app/projects/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Client Component Browser]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./apps/web/src/app/projects/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Client Component SSR]
-    ./apps/web/src/app/page.tsx [Server Component]
-
-
- GET / 500 in 406ms (compile: 321ms, render: 85ms)
- GET /users/signin 200 in 542ms (compile: 35ms, render: 507ms)
- ✓ Compiled in 388ms
- GET /users/signin 200 in 131ms (compile: 15ms, render: 115ms)
- GET / 200 in 1128ms (compile: 519ms, render: 609ms)
- GET / 200 in 458ms (compile: 25ms, render: 433ms)
- GET /users/signup 200 in 115ms (compile: 34ms, render: 82ms)
+ GET / 200 in 18.0s (compile: 16.5s, render: 1471ms)
+ ○ Compiling /users/signin ...
+ GET /users/signin 200 in 9.6s (compile: 8.0s, render: 1613ms)
+ GET /users/signin 200 in 1038ms (compile: 157ms, render: 881ms)
+ GET / 200 in 51ms (compile: 10ms, render: 41ms)
+ ✓ Compiled in 586ms
+ GET / 200 in 1150ms (compile: 568ms, render: 583ms)
+ ✓ Compiled in 581ms
+ GET /?projectId=54d9ef44-8813-4081-98d1-b6f028d2905a 200 in 742ms (compile: 249ms, render: 493ms)
+ GET / 200 in 70ms (compile: 11ms, render: 58ms)
+ GET /users/signin 200 in 193ms (compile: 44ms, render: 149ms)
+ GET / 200 in 144ms (compile: 33ms, render: 111ms)
+ ✓ Compiled in 524ms
+ GET /?projectId=b9424bdb-ad58-477f-89ec-e90045832cdd 200 in 806ms (compile: 324ms, render: 482ms)
+ GET /?projectId=b9424bdb-ad58-477f-89ec-e90045832cdd 200 in 144ms (compile: 14ms, render: 130ms)
+ GET / 200 in 55ms (compile: 11ms, render: 44ms)
+ GET /users/signin 200 in 303ms (compile: 54ms, render: 249ms)
+ GET / 200 in 111ms (compile: 19ms, render: 93ms)
+ GET / 200 in 62ms (compile: 11ms, render: 51ms)
+ ✓ Compiled in 6s
+ GET / 200 in 951ms (compile: 771ms, render: 180ms)
+ GET / 200 in 234ms (compile: 137ms, render: 96ms)
+ ○ Compiling /explanation/[id] ...
+ GET /explanation/cmjpsmuz40002v08kc3690beq 200 in 12.7s (compile: 12.3s, render: 325ms)
+ GET / 200 in 182ms (compile: 36ms, render: 146ms)
+ GET /explanation/cmjluy8dr0002v0m05xrl7xuy 200 in 198ms (compile: 23ms, render: 175ms)
+ GET / 200 in 85ms (compile: 12ms, render: 73ms)
+ GET / 200 in 45ms (compile: 9ms, render: 37ms)
+ ○ Compiling /docs ...

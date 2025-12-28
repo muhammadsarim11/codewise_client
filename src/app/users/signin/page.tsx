@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
+import { API_BASE_URL } from '../../utils/api';
 import { Loader2, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
 
 function SignInForm() {
@@ -30,7 +31,7 @@ function SignInForm() {
 
     try {
       // Backend expects: { email, password }
-      const response = await axios.post('http://localhost:5000/signin', {
+      const response = await axios.post(`${API_BASE_URL}/signin`, {
         email,
         password
       });

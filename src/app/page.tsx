@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
+import { API_BASE_URL } from './utils/api';
 import Editor from '@monaco-editor/react';
 import { 
   Upload, 
@@ -138,7 +139,7 @@ export default function Home() {
         });
       }, 500);
 
-      const response = await axios.post('http://localhost:5000/explainations', formData, {
+      const response = await axios.post(`${API_BASE_URL}/explainations`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`

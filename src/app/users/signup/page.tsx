@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
+import { API_BASE_URL } from '../../utils/api';
 import { Loader2, ArrowRight } from 'lucide-react';
 
 export default function Register() {
@@ -22,7 +23,7 @@ export default function Register() {
 
     try {
       // Backend Structure Requirement: name, email, bio, password
-      const response = await axios.post('http://localhost:5000/signup', {
+      const response = await axios.post(`${API_BASE_URL}/signup`, {
         name,
         email,
         bio,

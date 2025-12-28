@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import { API_BASE_URL } from '../utils/api';
 import { 
   Folder, 
   Plus, 
@@ -73,7 +74,7 @@ export default function ProjectsView() {
       const token = localStorage.getItem('accessToken');
       if (!token) return;
       
-      const res = await axios.get('http://localhost:5000/projects/get', {
+      const res = await axios.get(`${API_BASE_URL}/projects/get`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProjects(res.data.projects || []);
@@ -88,7 +89,7 @@ export default function ProjectsView() {
     setLoadingExplanations(true);
     try {
       const token = localStorage.getItem('accessToken');
-      const res = await axios.get('http://localhost:5000/explainations', {
+      const res = await axios.get(`${API_BASE_URL}/explainations`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -109,7 +110,7 @@ export default function ProjectsView() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('accessToken');
-      const res = await axios.post('http://localhost:5000/projects/create', {
+      const res = await axios.post(`${API_BASE_URL}/projects/create`, {
         name: projectName,
         description: projectDesc
       }, {
@@ -129,7 +130,7 @@ export default function ProjectsView() {
 
     try {
       const token = localStorage.getItem('accessToken');
-      const res = await axios.put(`http://localhost:5000/projects/edit/${currentProject.id}`, {
+      const res = await axios.put(`${API_BASE_URL}/projects/edit/${currentProject.id}`, {
         name: projectName,
         description: projectDesc
       }, {
@@ -159,7 +160,7 @@ export default function ProjectsView() {
     if (!projectToDelete) return;
     try {
       const token = localStorage.getItem('accessToken');
-      await axios.delete(`http://localhost:5000/projects/delete/${projectToDelete.id}`, {
+      await axios.delete(`${API_BASE_URL}/projects/delete/${projectToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProjects(prev => prev.filter(p => p.id !== projectToDelete.id));
@@ -175,7 +176,7 @@ export default function ProjectsView() {
     e.stopPropagation();
     try {
       const token = localStorage.getItem('accessToken');
-      const res = await axios.patch(`http://localhost:5000/explainations/${explanationId}/share`, {}, {
+      const res = await axios.patch(`${API_BASE_URL}/explainations/${explanationId}/share`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

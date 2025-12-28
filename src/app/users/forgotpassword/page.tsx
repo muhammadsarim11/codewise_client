@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../utils/api';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { 
@@ -35,7 +36,7 @@ export default function ForgotPassword() {
     try {
       // Backend: router.post("/forgot-password", forgotPassword)
       // Expects: { email }
-      await axios.post('http://localhost:5000/forgot-password', { email });
+      await axios.post(`${API_BASE_URL}/forgot-password`, { email });
       
       setStatus({ 
         type: 'success', 
@@ -61,7 +62,7 @@ export default function ForgotPassword() {
     try {
       // Backend: router.post("/reset-password", resetPassword)
       // Expects: { email, otp, newpassword }
-      await axios.post('http://localhost:5000/reset-password', {
+      await axios.post(`${API_BASE_URL}/reset-password`, {
         email,
         otp,
         newpassword: newPassword
