@@ -20,8 +20,9 @@ import {
   Puzzle,
   Code2,
   Globe,
-  Share2, // Added
-  Check   // Added
+  Share2,
+  Check,
+  ArrowLeft
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -53,12 +54,11 @@ export default function PublicSharePage() {
   const [data, setData] = useState<ExplanationData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [copied, setCopied] = useState(false); // State for copy feedback
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const fetchPublicExplanation = async () => {
       try {
-        // Public Endpoint: GET /share/:shareId (No Auth Header needed)
         const response = await axios.get(`${API_BASE_URL}/share/${params.shareId}`);
         
         if (response.data.success) {
@@ -189,6 +189,11 @@ export default function PublicSharePage() {
           });
           monaco.editor.setTheme('codewise-dark');
         }}
+        loading={
+            <div className="flex items-center justify-center h-full text-gray-500 font-mono text-sm">
+                Loading Editor...
+            </div>
+        }
       />
     );
   };
@@ -229,18 +234,18 @@ export default function PublicSharePage() {
       
       {/* Public Header */}
       <header className="flex-none border-b border-[#333333] bg-[#000000] z-20">
-        <div className="px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div className="px-4 md:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
                <div className="size-6 text-white">
                   <svg className="w-full h-full" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                     <path clipRule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fillRule="evenodd"></path>
                     <path clipRule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fillRule="evenodd"></path>
                   </svg>
                </div>
-               <span className="font-mono font-semibold tracking-tight text-sm">CodeWise</span>
-            </div>
-            <div className="h-4 w-[1px] bg-[#333]"></div>
+               <span className="font-mono font-semibold tracking-tight text-sm hidden sm:inline">CodeWise</span>
+            </Link>
+            <div className="h-4 w-[1px] bg-[#333] hidden sm:block"></div>
             <div className="flex flex-col">
                <h1 className="text-sm font-semibold tracking-tight text-white flex items-center gap-2">
                  <Globe size={14} className="text-indigo-400" />
@@ -249,10 +254,10 @@ export default function PublicSharePage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-             <div className="hidden sm:flex items-center gap-2 mr-4">
+          <div className="flex items-center gap-2 md:gap-3">
+             <div className="hidden md:flex items-center gap-2 mr-4">
                <span className="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">
-                   <CheckCircle2 size={10} /> VERIFIED ANALYSIS
+                   <CheckCircle2 size={10} /> VERIFIED
                </span>
              </div>
              
@@ -276,17 +281,18 @@ export default function PublicSharePage() {
                href="/users/signup"
                className="flex items-center gap-2 px-4 py-1.5 rounded-sm bg-white text-black border border-white text-xs font-mono font-bold hover:bg-gray-200 transition-all shadow-lg shadow-white/10"
              >
-                TRY CODEWISE
+                TRY IT
              </Link>
           </div>
         </div>
       </header>
 
-      {/* Main Content - Split View */}
-      <main className="flex-1 flex flex-col md:flex-row overflow-hidden animate-in fade-in zoom-in duration-500">
+      {/* Main Content - Responsive Split View */}
+      <main className="flex-1 flex flex-col lg:flex-row overflow-hidden animate-in fade-in zoom-in duration-500">
         
         {/* LEFT PANEL: CODE VIEWER */}
-        <div className="w-full md:w-1/2 md:border-r border-[#333333] flex flex-col bg-[#050505] relative group min-h-[45vh] md:min-h-0">
+        {/* Mobile: Top half. Desktop: Left half. */}
+        <div className="w-full lg:w-1/2 h-1/2 lg:h-auto border-b lg:border-b-0 lg:border-r border-[#333333] flex flex-col bg-[#050505] relative group">
            <div className="flex-none px-4 py-2 bg-[#050505] border-b border-[#252526] flex items-center justify-between">
               <span className="text-xs font-mono text-[#969696] uppercase tracking-wider flex items-center gap-2">
                 <Code2 size={12} /> Source Code
@@ -305,7 +311,8 @@ export default function PublicSharePage() {
         </div>
 
         {/* RIGHT PANEL: ANALYSIS REPORT */}
-        <div className="w-full md:w-1/2 flex flex-col bg-[#050505] border-t md:border-t-0 border-[#333333]">
+        {/* Mobile: Bottom half. Desktop: Right half. */}
+        <div className="w-full lg:w-1/2 h-1/2 lg:h-auto flex flex-col bg-[#050505]">
            <div className="flex-none px-6 py-3 border-b border-[#333333] bg-[#050505]">
               <h2 className="text-sm font-medium text-white flex items-center gap-2">
                  <Bot size={16} className="text-indigo-400" /> 
@@ -313,7 +320,7 @@ export default function PublicSharePage() {
               </h2>
            </div>
            
-           <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 custom-scrollbar space-y-8 pb-20">
+           <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 custom-scrollbar space-y-8 pb-20">
               
               {/* 1. Overview */}
               <section>
@@ -383,7 +390,7 @@ export default function PublicSharePage() {
               </section>
 
               {/* 5. Complexity & Improvements Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                  {/* Improvements */}
                  <section className="flex flex-col h-full">
                     <div className="flex items-center gap-2 mb-3">

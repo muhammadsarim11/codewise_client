@@ -386,9 +386,7 @@ export default function ExplanationResult() {
                  <FileCode size={14} className="text-indigo-400" />
                  <span className="truncate max-w-[120px] sm:max-w-xs">{data?.fileName || 'snippet.js'}</span>
                </h1>
-               <span className="hidden sm:inline text-[10px] font-mono text-[#888888]">
-                 Processed by {data?.aiModel || 'AI'} • {new Date(data?.createdAt || Date.now()).toLocaleDateString()}
-               </span>
+           
             </div>
           </div>
 
