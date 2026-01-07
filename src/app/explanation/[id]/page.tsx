@@ -4,7 +4,8 @@ import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import { API_BASE_URL } from '../../utils/api';
-import Editor  from '@monaco-editor/react';
+// 1. Import Dynamic from Next.js
+import dynamic from 'next/dynamic';
 import { 
   ArrowLeft, 
   Bot, 
@@ -25,6 +26,16 @@ import {
   X,
   Copy
 } from 'lucide-react';
+
+// 2. Dynamically Import Monaco Editor (Heavy Component)
+const Editor = dynamic(() => import('@monaco-editor/react'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full text-gray-500 font-mono text-sm bg-[#050505]">
+      Loading Editor...
+    </div>
+  ),
+});
 
 // Updated Interface matching your backend JSON
 interface ExplanationDoc {
@@ -49,8 +60,54 @@ interface ExplanationData {
   keyPoints: string[];
   status: string;
   isPublic: boolean;
-  publicShareId?: string; // Added to interface
+  publicShareId?: string;
 }
+
+// 3. Move Helper Components OUTSIDE to prevent re-mounting on every render
+const GlobalStyles = () => (
+  <style jsx global>{`
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 5px; border: 2px solid #0a0a0a; }
+    ::-webkit-scrollbar-thumb:hover { background: #444; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  `}</style>
+);
+
+const CodeEditorView = ({ code, language }: { code: string, language: string }) => {
+  return (
+    <Editor
+      height="100%"
+      language={language || 'javascript'}
+      value={code}
+      theme="vs-dark"
+      options={{
+        readOnly: true,
+        minimap: { enabled: false },
+        fontSize: 13,
+        fontFamily: 'JetBrains Mono, monospace',
+        renderLineHighlight: 'none',
+        padding: { top: 20, bottom: 20 },
+        scrollBeyondLastLine: false,
+        domReadOnly: true
+      }}
+      onMount={(editor, monaco) => {
+        monaco.editor.defineTheme('codewise-dark', {
+          base: 'vs-dark',
+          inherit: true,
+          rules: [],
+          colors: {
+            'editor.background': '#050505',
+            'editor.lineHighlightBackground': '#111111',
+            'editorGutter.background': '#050505',
+          }
+        });
+        monaco.editor.setTheme('codewise-dark');
+      }}
+    />
+  );
+};
 
 export default function ExplanationResult() {
   const params = useParams();
@@ -82,10 +139,8 @@ export default function ExplanationResult() {
         }
       });
 
-      // Handle response structure variations
       let responseData = response.data.explanation || response.data.data || response.data;
       
-      // Normalize Status
       if (responseData && responseData.status) {
          responseData = {
             ...responseData,
@@ -93,7 +148,7 @@ export default function ExplanationResult() {
          };
       }
 
-      console.log("Poll Response:", responseData);
+      // console.log("Poll Response:", responseData); // Optional: Remove logs for prod
       setData(responseData);
 
       const status = responseData.status;
@@ -133,11 +188,9 @@ export default function ExplanationResult() {
 
   // --- ACTIONS ---
 
-  // 1. PDF EXPORT
   const handleExport = () => {
     if (!data) return;
     
-    // Dynamic import for jspdf
     import('jspdf').then(({ default: jsPDF }) => {
       const doc = new jsPDF();
       const margin = 15;
@@ -171,14 +224,12 @@ export default function ExplanationResult() {
         yPos += (lines.length * lineHeight) + 10;
       };
 
-      // Header
       doc.setFontSize(22);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(0, 0, 0);
       doc.text("Analysis Report", margin, yPos);
       yPos += 10;
 
-      // Meta
       doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(100, 100, 100);
@@ -187,7 +238,6 @@ export default function ExplanationResult() {
       doc.text(`Language: ${data.language}`, margin, yPos);
       yPos += 15;
 
-      // Sections
       addSection("1. Overview", data.explanationDoc.overview);
       
       const keyPointsText = data.keyPoints.map(p => `• ${p.replace(/^- /, '')}`).join('\n');
@@ -207,7 +257,6 @@ export default function ExplanationResult() {
     });
   };
 
-  // 2. SHARE HANDLER
   const handleShare = async () => {
     if (!data) return;
     setShareLoading(true);
@@ -215,7 +264,6 @@ export default function ExplanationResult() {
     try {
       const token = localStorage.getItem('accessToken');
       
-      // If already public and we have the ID locally, just show it (optimization)
       if (data.isPublic && data.publicShareId) {
          const url = `${window.location.origin}/share/${data.publicShareId}`;
          setShareLink(url);
@@ -224,7 +272,6 @@ export default function ExplanationResult() {
          return;
       }
 
-      // Otherwise call backend to enable sharing/get ID
       const response = await axios.patch(`${API_BASE_URL}/explainations/${data.id}/share`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -234,7 +281,6 @@ export default function ExplanationResult() {
         const url = `${window.location.origin}/share/${shareId}`;
         setShareLink(url);
         setShowShareModal(true);
-        // Update local state so we don't need to hit API again immediately
         setData(prev => prev ? { ...prev, isPublic: true, publicShareId: shareId } : null);
       } else {
         alert("Failed to generate share link");
@@ -252,54 +298,6 @@ export default function ExplanationResult() {
     navigator.clipboard.writeText(shareLink);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  // --- RENDERING HELPERS ---
-
-  const GlobalStyles = () => (
-    <style jsx global>{`
-      ::-webkit-scrollbar { width: 10px; height: 10px; }
-      ::-webkit-scrollbar-track { background: #0a0a0a; }
-      ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 5px; border: 2px solid #0a0a0a; }
-      ::-webkit-scrollbar-thumb:hover { background: #444; }
-      .no-scrollbar::-webkit-scrollbar { display: none; }
-      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    `}</style>
-  );
-
-  const CodeEditorView = ({ code, language }: { code: string, language: string }) => {
-    return (
-      <Editor
-        height="100%"
-        language={language || 'javascript'}
-        value={code}
-        theme="vs-dark"
-        options={{
-          readOnly: true,
-          minimap: { enabled: false },
-          fontSize: 13,
-          fontFamily: 'JetBrains Mono, monospace',
-          renderLineHighlight: 'none',
-          padding: { top: 20, bottom: 20 },
-          scrollBeyondLastLine: false,
-          domReadOnly: true
-        }}
-        onMount={(editor, monaco) => {
-          monaco.editor.defineTheme('codewise-dark', {
-            base: 'vs-dark',
-            inherit: true,
-            rules: [],
-            colors: {
-              'editor.background': '#050505',
-              'editor.lineHighlightBackground': '#111111',
-              'editorGutter.background': '#050505',
-            }
-          });
-          monaco.editor.setTheme('codewise-dark');
-        }}
-        loading={<div className="flex items-center justify-center h-full text-gray-500 font-mono text-sm">Loading Editor...</div>}
-      />
-    );
   };
 
   // --- RENDERING STATES ---
@@ -375,7 +373,7 @@ export default function ExplanationResult() {
         <div className="px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button 
-              onClick={() => router.push('/')}
+              onClick={() => router.push('/projects')}
               className="text-[#888888] hover:text-white transition-colors p-1"
             >
               <ArrowLeft size={18} />
@@ -386,7 +384,7 @@ export default function ExplanationResult() {
                  <FileCode size={14} className="text-indigo-400" />
                  <span className="truncate max-w-[120px] sm:max-w-xs">{data?.fileName || 'snippet.js'}</span>
                </h1>
-           
+            
             </div>
           </div>
 
@@ -488,7 +486,6 @@ export default function ExplanationResult() {
                     <h3 className="text-xs font-mono text-white uppercase tracking-wider">Logic Flow</h3>
                  </div>
                  <div className="space-y-3">
-                   {/* Improved Rendering: split newlines and render separately with cards and highlighting */}
                    {data?.explanationDoc?.logicFlow ? (
                      data.explanationDoc.logicFlow.split('\n').filter(line => line.trim() !== '').map((line, i) => (
                        <div key={i} className="bg-[#111] p-3 rounded border border-[#333] text-sm text-gray-300 leading-relaxed hover:border-[#444] transition-colors border-l-2 border-l-indigo-500/50">
@@ -518,11 +515,9 @@ export default function ExplanationResult() {
                     <h3 className="text-xs font-mono text-white uppercase tracking-wider">Function Breakdown</h3>
                  </div>
                  <div className="space-y-3">
-                   {/* Improved Rendering: split newlines and render separately */}
                    {data?.explanationDoc?.functionBreakdown ? (
                      data.explanationDoc.functionBreakdown.split('\n').filter(line => line.trim() !== '').map((line, i) => (
                        <div key={i} className="bg-[#111] p-3 rounded border border-[#333] text-sm text-gray-300 leading-relaxed hover:border-[#444] transition-colors">
-                         {/* Highlight code ticks `...` if present */}
                          {line.includes('`') ? (
                            <span>
                              {line.split('`').map((part, index) => 

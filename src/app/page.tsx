@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { API_BASE_URL } from './utils/api';
-import Editor from '@monaco-editor/react';
+import dynamic from 'next/dynamic'; 
 import { 
   Upload, 
   FileCode, 
@@ -13,13 +13,25 @@ import {
   ArrowRight,
   LogOut,
   Folder,
-  Menu
+  Menu,
+  Loader2
 } from 'lucide-react';
+
 // Import Components
 import ProjectsView from './projects/page';
-import LandingPage from './landing/page'; // Import the Landing Page
+import LandingPage from './landing/page';
 
-// Language Options
+// Editor Import
+const Editor = dynamic(() => import('@monaco-editor/react'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-full w-full flex flex-col items-center justify-center bg-[#1e1e1e] text-[#888] gap-2">
+      <Loader2 className="animate-spin w-6 h-6" />
+      <span className="text-xs font-mono">Loading Editor...</span>
+    </div>
+  ),
+});
+
 const LANGUAGES = [
   { id: 'javascript', name: 'JavaScript', ext: 'js' },
   { id: 'typescript', name: 'TypeScript', ext: 'ts' },
@@ -37,7 +49,6 @@ const LANGUAGES = [
 
 export default function Home() {
   const router = useRouter();
-  
   
   // Auth & User State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -65,18 +76,17 @@ export default function Home() {
     const storedUser = localStorage.getItem('user');
 
     if (token && storedUser) {
-      // User is logged in
       setUser(JSON.parse(storedUser));
       setIsAuthenticated(true);
 
-      // Check for Project Context in URL (Deep Linking)
-      const paramProjectId = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('projectId') : null;
-      if (paramProjectId) {
-        setLinkedProjectId(paramProjectId);
-        setActivePage('dashboard'); 
+      if (typeof window !== 'undefined') {
+          const paramProjectId = new URLSearchParams(window.location.search).get('projectId');
+          if (paramProjectId) {
+            setLinkedProjectId(paramProjectId);
+            setActivePage('dashboard'); 
+          }
       }
     } else {
-      // User is visitor
       setIsAuthenticated(false);
     }
   }, [router]);
@@ -174,7 +184,7 @@ export default function Home() {
     localStorage.removeItem('user');
     setIsAuthenticated(false);
     setUser(null);
-    router.push('/'); // Reset to root (Landing Page)
+    router.push('/'); 
   };
 
   const navTo = (page: string) => {
@@ -185,18 +195,9 @@ export default function Home() {
 
   // --- RENDER LOGIC ---
 
-  // 1. Loading State (prevent flash)
-  if (isAuthenticated === null) {
-    return null; // Or a sleek loading spinner
-  }
-
-  // 2. Visitor View -> Render Landing Page
-  if (!isAuthenticated) {
-    return <LandingPage />;
-  }
-
-  // 3. Authenticated View -> Render Dashboard
-  if (!user) return null; // Safety check
+  if (isAuthenticated === null) return null; 
+  if (!isAuthenticated) return <LandingPage />;
+  if (!user) return null; 
 
   return (
     <Suspense fallback={null}>
@@ -211,12 +212,12 @@ export default function Home() {
         }}
       />
 
-      {/* Header (Top Navigation) */}
+      {/* --- HEADER (Updated to match Projects Page Design) --- */}
       <header className="relative z-20 w-full border-b border-[#333333] bg-[#000000]/80 backdrop-blur-md">
         <div className="px-6 md:px-10 py-4 flex items-center justify-between">
           
           {/* Logo */}
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => navTo('dashboard')}>
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push('/')}>
             <div className="size-6 text-white">
               <svg className="w-full h-full" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                 <path clipRule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fillRule="evenodd"></path>
@@ -229,19 +230,27 @@ export default function Home() {
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-6">
             <nav className="flex gap-6">
-              <button onClick={() => navTo('dashboard')} className={`text-xs font-mono transition-colors flex items-center gap-1 ${activePage === 'dashboard' ? 'text-white' : 'text-[#888] hover:text-white'}`}>
+              <button 
+                onClick={() => navTo('dashboard')} 
+                className="text-xs font-mono text-white flex items-center gap-1 cursor-default"
+              >
                 /dashboard
               </button>
-              <button onClick={() => navTo('projects')} className={`text-xs font-mono transition-colors flex items-center gap-1 ${activePage === 'projects' ? 'text-white' : 'text-[#888] hover:text-white'}`}>
+              
+              <button 
+                onClick={() => router.push('/projects')} 
+                className="text-xs font-mono text-[#888] hover:text-white transition-colors flex items-center gap-1"
+              >
                 /projects
               </button>
-           
             </nav>
+            
             <div className="h-6 w-[1px] bg-[#333333]"></div>
             
+            {/* UPDATED LOGOUT BUTTON (Styled Pill) */}
             <button onClick={handleLogout} className="group flex items-center gap-2 rounded-full pr-3 pl-1 py-1 bg-[#111111] border border-[#333333] hover:border-[#888888] transition-all">
               <div className="size-6 rounded-full bg-[#333] flex items-center justify-center text-[10px] font-mono">
-                {user.name.charAt(0).toUpperCase()}
+                {user?.name?.charAt(0).toUpperCase()}
               </div>
               <span className="text-xs font-mono text-[#888888] group-hover:text-white">Logout</span>
             </button>
@@ -260,8 +269,8 @@ export default function Home() {
         {isMobileMenuOpen && (
           <div className="md:hidden absolute top-full left-0 w-full bg-[#050505] border-b border-[#333] animate-in slide-in-from-top-2">
             <nav className="flex flex-col p-4 space-y-4">
-              <button onClick={() => navTo('dashboard')} className={`text-sm font-mono text-left px-2 ${activePage === 'dashboard' ? 'text-white' : 'text-[#888]'}`}>/dashboard</button>
-              <button onClick={() => navTo('projects')} className={`text-sm font-mono text-left px-2 ${activePage === 'projects' ? 'text-white' : 'text-[#888]'}`}>/projects</button>
+              <button onClick={() => navTo('dashboard')} className="text-sm font-mono text-left px-2 text-white">/dashboard</button>
+              <button onClick={() => router.push('/projects')} className="text-sm font-mono text-left px-2 text-[#888]">/projects</button>
               <div className="h-[1px] bg-[#333] w-full my-2"></div>
               <button onClick={handleLogout} className="text-sm font-mono text-left text-red-400 px-2 flex items-center gap-2">
                 <LogOut size={14} /> Logout
@@ -274,11 +283,6 @@ export default function Home() {
       {/* Main Content */}
       <main className="relative z-10 flex-1 flex flex-col p-4 sm:p-6 overflow-hidden">
         
-        {/* VIEW: PROJECTS */}
-        {activePage === 'projects' && (
-           <ProjectsView />
-        )}
-
         {/* VIEW: DASHBOARD (Home) */}
         {activePage === 'dashboard' && (
           <div className="flex-1 flex flex-col items-center justify-center min-h-[calc(100vh-100px)]">
@@ -385,6 +389,7 @@ export default function Home() {
                           </div>
 
                           <div className="flex-1 border border-[#333333] rounded-md overflow-hidden mb-6 relative">
+                              {/* 3. Using the Dynamically Imported Editor */}
                               <Editor
                                 height="100%"
                                 defaultLanguage="javascript"
@@ -479,7 +484,3 @@ export default function Home() {
     </Suspense>
   );
 }
-
-
-
-// application completed
