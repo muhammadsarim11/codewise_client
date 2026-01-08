@@ -7,7 +7,6 @@ import {
   Book, 
   ChevronRight, 
   FileText, 
-  Download, 
   ArrowLeft, 
   Cpu, 
   Loader2,
@@ -15,7 +14,8 @@ import {
   X,
   FileType,
   FileCode,
-  ArrowRight
+  ArrowRight,
+  RefreshCcw // New Icon for Regenerate
 } from 'lucide-react';
 import { API_BASE_URL } from '@/app/utils/api'; 
 import ReactMarkdown from 'react-markdown'; 
@@ -72,9 +72,11 @@ export default function ProjectDocs() {
       if (res.data.success) {
         setDocs(res.data.docs);
         const firstSection = res.data.docs.structure?.sections?.[0];
-        if (firstSection?.pages?.[0]) {
+        // Agar pehle se page select nahi tha, to first page select karo
+        if (firstSection?.pages?.[0] && !activePage) {
           setActivePage(firstSection.pages[0]);
         }
+        // Agar active page tha, to content refresh ho jayega automatically
       }
     } catch (error: any) {
       alert(error.response?.data?.message || "Failed to generate docs");
@@ -164,47 +166,12 @@ export default function ProjectDocs() {
     );
   }
 
-  // No Docs Found State
-  if (!docs) {
-    return (
-      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
-        <div className="max-w-md w-full text-center space-y-6 animate-in fade-in zoom-in duration-500">
-            <div className="bg-[#111] p-4 rounded-full inline-block border border-[#333]">
-                <Book className="w-12 h-12 text-white" />
-            </div>
-            <h1 className="text-3xl font-bold tracking-tight">Generate Documentation</h1>
-            <p className="text-[#888]">
-                Transform your analyzed code into a professional, structured documentation site using AI.
-            </p>
-            <div className="flex gap-4 justify-center pt-4">
-                <button 
-                    onClick={() => router.push('/projects')} 
-                    className="px-6 py-2 rounded border border-[#333] text-[#888] hover:text-white hover:border-white transition-all text-sm font-mono"
-                >
-                    Cancel
-                </button>
-                <button 
-                    onClick={handleGenerate}
-                    disabled={generating}
-                    className="flex items-center gap-2 px-6 py-2 rounded bg-white text-black font-bold hover:bg-gray-200 transition-all disabled:opacity-50 text-sm font-mono"
-                >
-                    {generating ? <Loader2 className="animate-spin w-4 h-4" /> : <Cpu className="w-4 h-4" />}
-                    {generating ? 'Generating...' : 'Generate Docs'}
-                </button>
-            </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Documentation Viewer UI
   return (
     <div className="min-h-screen bg-black text-white flex flex-col md:flex-row overflow-hidden font-sans">
         
       {/* --- MOBILE HEADER (FIXED) --- */}
       <div className="md:hidden border-b border-[#333] p-4 flex justify-between items-center bg-black/90 backdrop-blur z-30 sticky top-0 h-16">
          <div className="flex items-center gap-3">
-            {/* BACK BUTTON IN MOBILE HEADER */}
             <button 
                 onClick={() => router.push('/projects')}
                 className="text-[#888] hover:text-white p-1 rounded-md active:bg-[#222]"
@@ -212,7 +179,7 @@ export default function ProjectDocs() {
                 <ArrowLeft size={20} />
             </button>
             <span className="font-mono font-bold text-sm truncate max-w-[150px]">
-                {docs.title || 'Documentation'}
+                {docs?.title || 'Documentation'}
             </span>
          </div>
          <button 
@@ -223,7 +190,7 @@ export default function ProjectDocs() {
          </button>
       </div>
 
-      {/* --- BACKDROP OVERLAY (For Mobile) --- */}
+      {/* --- BACKDROP OVERLAY --- */}
       {mobileMenuOpen && (
         <div 
             className="fixed inset-0 bg-black/60 z-40 md:hidden backdrop-blur-sm"
@@ -231,7 +198,7 @@ export default function ProjectDocs() {
         />
       )}
 
-      {/* --- SIDEBAR NAVIGATION (RESPONSIVE) --- */}
+      {/* --- SIDEBAR NAVIGATION (ALWAYS VISIBLE) --- */}
       <aside className={`
         fixed inset-y-0 left-0 z-50 w-72 bg-[#050505] border-r border-[#333] 
         transform transition-transform duration-300 ease-in-out 
@@ -247,17 +214,18 @@ export default function ProjectDocs() {
                 >
                     <ArrowLeft size={14} /> Back to Projects
                 </button>
-                {/* Mobile Close Button inside Sidebar */}
                 <button onClick={() => setMobileMenuOpen(false)} className="md:hidden text-[#666] hover:text-white">
                     <X size={18} />
                 </button>
             </div>
-            <h2 className="font-bold text-lg leading-tight line-clamp-2 text-white">{docs.title}</h2>
+            <h2 className="font-bold text-lg leading-tight line-clamp-2 text-white">
+                {docs?.title || "Project Documentation"}
+            </h2>
         </div>
 
-        {/* Sidebar Content (Scrollable) */}
+        {/* Sidebar Content (Only if docs exist) */}
         <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar">
-            {docs.structure.sections.map((section: any, idx: number) => (
+            {docs && docs.structure && docs.structure.sections.map((section: any, idx: number) => (
                 <div key={idx}>
                     <h3 className="text-[10px] font-bold text-[#555] uppercase tracking-widest mb-3 px-2">
                         {section.title}
@@ -283,28 +251,56 @@ export default function ProjectDocs() {
                     </div>
                 </div>
             ))}
+            
+            {!docs && (
+                <div className="text-center mt-10 px-4">
+                    <p className="text-[#444] text-xs font-mono">No structure available. Generate documentation to view sections.</p>
+                </div>
+            )}
         </div>
 
-        {/* Sidebar Footer (Download Options) */}
-        <div className="p-4 border-t border-[#333] flex flex-col gap-2 bg-[#080808]">
-            <p className="text-[10px] text-[#666] font-mono mb-1 uppercase tracking-wider">Export Report</p>
-            <div className="flex gap-2">
-                <button 
-                    onClick={handleDownloadPDF}
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded border border-[#333] bg-[#111] text-[#ccc] hover:text-white hover:border-white text-xs font-mono transition-all"
-                    title="Download as PDF"
-                >
-                    <FileText size={14} /> PDF
-                </button>
-                <button 
-                    onClick={handleDownloadMD}
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded border border-[#333] bg-[#111] text-[#ccc] hover:text-white hover:border-white text-xs font-mono transition-all"
-                    title="Download as Markdown"
-                >
-                    <FileType size={14} /> MD
-                </button>
+        {/* --- SIDEBAR FOOTER (ACTIONS) --- */}
+        {docs && (
+            <div className="p-4 border-t border-[#333] flex flex-col gap-3 bg-[#080808]">
+                
+                {/* REGENERATE BUTTON ROW (NEW) */}
+                <div className="flex items-center justify-between">
+                    <p className="text-[10px] text-[#666] font-mono uppercase tracking-wider">Sync Docs</p>
+                    <button 
+                        onClick={handleGenerate}
+                        disabled={generating}
+                        className="flex items-center gap-1.5 text-[10px] font-mono text-indigo-400 hover:text-indigo-300 transition-colors disabled:opacity-50"
+                        title="Update documentation with new files"
+                    >
+                        <RefreshCcw size={12} className={generating ? "animate-spin" : ""} /> 
+                        {generating ? "UPDATING..." : "REGENERATE"}
+                    </button>
+                </div>
+
+                <div className="w-full h-px bg-[#222]"></div>
+
+                {/* EXPORT BUTTONS ROW */}
+                <div>
+                    <p className="text-[10px] text-[#666] font-mono mb-2 uppercase tracking-wider">Export</p>
+                    <div className="flex gap-2">
+                        <button 
+                            onClick={handleDownloadPDF}
+                            className="flex-1 flex items-center justify-center gap-2 py-2 rounded border border-[#333] bg-[#111] text-[#ccc] hover:text-white hover:border-white text-xs font-mono transition-all"
+                            title="Download as PDF"
+                        >
+                            <FileText size={14} /> PDF
+                        </button>
+                        <button 
+                            onClick={handleDownloadMD}
+                            className="flex-1 flex items-center justify-center gap-2 py-2 rounded border border-[#333] bg-[#111] text-[#ccc] hover:text-white hover:border-white text-xs font-mono transition-all"
+                            title="Download as Markdown"
+                        >
+                            <FileType size={14} /> MD
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
+        )}
       </aside>
 
       {/* --- MAIN CONTENT AREA --- */}
@@ -317,32 +313,55 @@ export default function ProjectDocs() {
             }}
          />
 
-         <div className="relative z-10 max-w-4xl mx-auto p-6 md:p-12 lg:p-16">
-            {activePage ? (
-                <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
+         <div className="relative z-10 w-full h-full">
+            {docs && activePage ? (
+                // --- VIEW: DOCUMENTATION CONTENT ---
+                <div className="max-w-4xl mx-auto p-6 md:p-12 lg:p-16 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
                     <div className="mb-8 pb-8 border-b border-[#333]">
-                      
+                        {/* <span className="text-xs font-mono text-indigo-400 mb-2 block">
+                            PAGE ID: {activePage.id.slice(-6).toUpperCase()}
+                        </span> */}
                         <h1 className="text-2xl md:text-4xl font-bold text-white mb-4 leading-tight">
                             {activePage.title}
                         </h1>
                     </div>
                     
-                    {/* Markdown Content */}
-                    <div className="prose prose-invert prose-sm md:prose-lg max-w-none text-[#999]">
+                    {/* Markdown Content - STYLED */}
+                    <div className="text-[#bbb] space-y-6">
                         <ReactMarkdown
+                            remarkPlugins={[]} 
                             components={{
-                                strong: ({node, ...props}) => <span className="text-white font-bold" {...props} />,
-                                ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-2 my-4" {...props} />,
-                                ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-2 my-4" {...props} />,
-                                li: ({node, ...props}) => <li className="text-gray-300 pl-1 marker:text-[#555]" {...props} />,
-                                p: ({node, ...props}) => <p className="leading-relaxed mb-6" {...props} />,
-                                h2: ({node, ...props}) => <h2 className="text-xl md:text-2xl font-semibold text-white mt-10 mb-4" {...props} />,
-                                h3: ({node, ...props}) => <h3 className="text-lg md:text-xl font-semibold text-white mt-8 mb-4 border-l-2 border-indigo-500 pl-3" {...props} />,
-                                code: ({node, ...props}) => <code className="bg-[#111] text-indigo-300 px-1 py-0.5 rounded text-sm font-mono border border-[#333]" {...props} />,
-                                blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-[#333] pl-4 italic text-gray-500 my-4" {...props} />
+                                h1: ({node, ...props}) => <h1 className="text-3xl font-bold text-white mt-10 mb-6 border-b border-gray-800 pb-2" {...props} />,
+                                h2: ({node, ...props}) => <h2 className="text-2xl font-semibold text-white mt-10 mb-4" {...props} />,
+                                h3: ({node, ...props}) => <h3 className="text-xl font-medium text-indigo-400 mt-8 mb-3" {...props} />,
+                                p: ({node, ...props}) => <p className="leading-relaxed mb-6 text-base" {...props} />,
+                                ul: ({node, ...props}) => <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-300" {...props} />,
+                                ol: ({node, ...props}) => <ol className="list-decimal pl-6 mb-6 space-y-2 text-gray-300" {...props} />,
+                                li: ({node, ...props}) => <li className="pl-1" {...props} />,
+                                blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-indigo-500 pl-4 italic text-gray-400 my-6 bg-[#111] p-4 rounded-r" {...props} />,
+                                code: ({node, ...props}) => {
+                                    const match = /language-(\w+)/.exec(props.className || '')
+                                    const isBlock = match || String(props.children).includes('\n');
+                                    return isBlock ? (
+                                        <div className="relative my-6 rounded-lg overflow-hidden border border-[#333] bg-[#0a0a0a]">
+                                            <div className="flex items-center justify-between px-4 py-2 bg-[#111] border-b border-[#333]">
+                                                <span className="text-xs font-mono text-[#666]">code</span>
+                                            </div>
+                                            <pre className="p-4 overflow-x-auto text-sm font-mono text-gray-300">
+                                                <code {...props} />
+                                            </pre>
+                                        </div>
+                                    ) : (
+                                        <code className="bg-[#1a1a1a] text-indigo-300 px-1.5 py-0.5 rounded text-sm font-mono border border-[#333]" {...props} />
+                                    )
+                                },
+                                strong: ({node, ...props}) => <strong className="text-white font-bold" {...props} />,
+                                a: ({node, ...props}) => <a className="text-indigo-400 hover:underline hover:text-indigo-300 transition-colors" {...props} />,
+                                hr: ({node, ...props}) => <hr className="border-[#333] my-8" {...props} />
                             }}
                         >
-                            {activePage.description}
+                            {/* FORCE NEWLINES */}
+                            {activePage.description ? activePage.description.replace(/\\n/g, '\n') : ''}
                         </ReactMarkdown>
                     </div>
 
@@ -364,7 +383,6 @@ export default function ProjectDocs() {
                                     </p>
                                 </div>
                             </div>
-                            
                             <div className="flex items-center gap-2 text-[#444] group-hover:text-white transition-colors">
                                 <span className="text-xs font-mono font-medium">OPEN REPORT</span>
                                 <ArrowRight size={16} />
@@ -373,16 +391,31 @@ export default function ProjectDocs() {
                     </div>
                 </div>
             ) : (
-                <div className="flex flex-col items-center justify-center h-[50vh] text-[#555] animate-in zoom-in duration-500">
-                    <Book className="w-16 h-16 mb-4 opacity-20" />
-                    <p className="text-sm font-mono text-center px-4">Select a section from the menu to start reading.</p>
-                    {/* Hint for mobile users */}
-                    <button 
-                        onClick={() => setMobileMenuOpen(true)}
-                        className="md:hidden mt-4 text-indigo-400 text-xs font-mono underline"
-                    >
-                        Open Menu
-                    </button>
+                // --- VIEW: EMPTY STATE ---
+                <div className="flex flex-col items-center justify-center h-full min-h-[80vh] text-center p-6 animate-in zoom-in duration-500">
+                    <div className="bg-[#111] p-5 rounded-full inline-block border border-[#333] mb-6 shadow-xl">
+                        <Book className="w-12 h-12 text-white" />
+                    </div>
+                    <h1 className="text-3xl font-bold tracking-tight text-white mb-3">Generate Documentation</h1>
+                    <p className="text-[#888] max-w-md mb-8 leading-relaxed">
+                        Transform your analyzed code into a professional, structured documentation site using AI.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <button 
+                            onClick={() => router.push('/projects')} 
+                            className="px-6 py-3 rounded border border-[#333] text-[#888] hover:text-white hover:border-white transition-all text-sm font-mono font-medium"
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            onClick={handleGenerate}
+                            disabled={generating}
+                            className="flex items-center justify-center gap-2 px-8 py-3 rounded bg-white text-black font-bold hover:bg-gray-200 transition-all disabled:opacity-50 text-sm font-mono shadow-lg shadow-white/10"
+                        >
+                            {generating ? <Loader2 className="animate-spin w-4 h-4" /> : <Cpu className="w-4 h-4" />}
+                            {generating ? 'Generating...' : 'Generate Docs'}
+                        </button>
+                    </div>
                 </div>
             )}
          </div>
